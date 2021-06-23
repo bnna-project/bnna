@@ -18,7 +18,7 @@ end cache;
 architecture bhv of cache is
     signal cache_register: std_logic_vector(31 downto 0);
 begin
-    cache_register <= b"00000000000000000000000000000000";
+    --cache_register <= b"00000000000000000000000000000000"; <= diese Zeile war für das 0000000x problem verantwortlich.
     process(clk)
     variable temp: unsigned(31 downto 0) := b"00000000000000000000000000000000";
     begin
@@ -26,10 +26,14 @@ begin
             ready <= '0';
 
             if(reset = '1') then
-                cache_register <= b"00000000000000000000000000001000";
+                cache_register <= b"00000000000000000000000000000000";
+            else
+                temp := shift_left(resize(unsigned(input1), cache_register'length), 1);
+                temp := temp - input1'length;
+                temp := temp + unsigned(cache_register);
             end if;
 
-            cache_register <= b"00000000000000000000000000000" & input1;
+            cache_register <= std_logic_vector(temp);
             output1 <= cache_register;
 
             ready <= '1';
