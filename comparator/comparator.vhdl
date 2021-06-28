@@ -2,34 +2,29 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity comparator is
-        generic(N: integer := 4);
+        generic(N: integer := 8);
         port(
                 a : in std_logic_vector(N-1 downto 0);
                 b : in std_logic_vector(N-1 downto 0);
-                a_equal_b : out std_logic;
-                a_less_b : out std_logic;
-                a_great_b : out std_logic
+                a_comp_b : out std_logic
         );
         end comparator;
+
 architecture Behavioral of comparator is
-signal temp1 : std_logic_vector(N-1 downto 0);
-signal temp2 : std_logic_vector(N-1 downto 0);
-signal temp3 : std_logic_vector(7 downto 0);
-signal temp4 : std_logic_vector(7 downto 0);
-signal temp5 : std_logic_vector(7 downto 0);
+
+signal wire_1 : std_logic_vector(N-1 downto 0);
+signal wire_2 : std_logic_vector(N-2 downto 0);
 begin   
-        --compare equality of a and b
-        inst_gen_xnor: for i in 0 to N-1 generate
-            temp1(i) <= a(i) xnor b(i);
+       
+        generate_comparators : for i in 0 to N-1 generate
+                inst_comparator : entity work.comparator_1bit(Behavioral)
+                        port map(a => a(i), b => b(i), a_comp_b => wire_1(i));
         end generate;
+        wire_2(0) <= wire_1(0) and wire_1(1);
 
-        temp2(0) <= temp1(0);
-
-        inst_gen_and: for i in 1 to N-1 generate
-            temp2(i) <= temp2(i-1) and temp1(i);
-         end generate;
-
-         a_equal_b <= temp2(N-1);
-         
+                geretate_and : for i in 2 to N-1 generate
+                        wire_2(i-1) <= wire_2(i-2) and wire_1(i);
+                end generate;
+                        a_comp_b <= wire_2(N-2);
 end Behavioral;
     

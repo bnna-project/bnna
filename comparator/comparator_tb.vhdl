@@ -5,14 +5,13 @@ entity comparator_tb is
 end comparator_tb;
 
 architecture TEST of comparator_tb is
-    signal a : std_logic_vector(1023 downto 0);
-    signal b : std_logic_vector(1023 downto 0);
-    signal y : std_logic;
+    signal a : std_logic_vector(4 downto 0);
+    signal b : std_logic_vector(4 downto 0);
     signal x : std_logic;
     begin
         inst_comparator :  entity work.comparator(Behavioral)
-                        generic map (1023)
-                        port map(a => a, b => b, a_equal_b => x, a_less_b => y);
-        a <= (others => '1');
-        b <= (others => '1');
+                        generic map (8)
+                        port map(a => a, b => b, a_comp_b => x);
+        a <= "11100", "10001" after 5 ns, "00000" after 10 ns;
+        b <= "10000", "10010" after 5 ns, "00000" after 10 ns;
     end TEST;
