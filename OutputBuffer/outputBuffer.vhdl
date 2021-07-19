@@ -3,6 +3,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+--collects the result of the PE´s
+--and pushes them out when the calculations are done
+
 entity outputBuffer is
   port (
     clk: in std_logic;
@@ -20,14 +23,14 @@ architecture behavior of outputBuffer is
   signal var: tmpVar:= (0,0);
   signal del: std_logic:= '0';
 begin
-  process(clk) 
+  process(clk) --collets the results and stores them in order
   
   begin
-    if rising_edge(clk) then
+    if rising_edge(clk) then 
 	
 	  if del = '1' then 
 		var(0) <= 0;
-        var(1) <= 0;	
+        var(1) <= 0;
 	  end if;
 	
 	  for I in 1 to 4 loop
@@ -44,7 +47,7 @@ begin
     end if;
   end process;
 
-  process(reset, clk) 
+  process(reset, clk) --push the results out
   variable rst, tmp: integer:= 0;
   begin
     if reset = '1' then
@@ -60,6 +63,7 @@ begin
 			rst:= 0;
 			del<='1';
 		end if;
+		
 	end if;
     
   end process;

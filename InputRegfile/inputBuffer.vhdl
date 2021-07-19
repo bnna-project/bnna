@@ -3,6 +3,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 
+--gets vectors and tresholds and distributes them over the PE 
+--according to the FiFo principle  
+--each vector multiplication must be pushed into the block 
+
 entity inputBuffer is
   port(
     clk: in std_logic;
@@ -22,19 +26,19 @@ end;
 
 architecture behavior of inputBuffer is
 type ramtype is array (2047 downto 0) of std_logic_vector(1023 downto 0);
-signal mem: ramtype;
+signal mem: ramtype; --memory for vectors
 
 type ramtypeb is array (2047 downto 0) of std_logic_vector(1023 downto 0);
-signal memb: ramtypeb;
+signal memb: ramtypeb;--memory for vectors
 
 type tresHoldBuffer is array (2047 downto 0) of std_logic_vector(7 downto 0);
-signal treshold: tresHoldBuffer;
+signal treshold: tresHoldBuffer; --memory for tresHold
 
 type adressRAM is array (4 downto 1) of std_logic_vector(10 downto 0);
-signal addr:adressRAM := (others => "00000000000");
+signal addr:adressRAM := (others => "00000000000"); --memory for the addresses of the vectors for each PE
 
 type stateRAM is array (4 downto 1) of std_logic_vector(7 downto 0);
-signal state: stateRAM := (others =>  "00000000");
+signal state: stateRAM := (others =>  "00000000");-- statuts of how much of a vector the PE has processed
 
 
  begin
@@ -54,10 +58,10 @@ signal state: stateRAM := (others =>  "00000000");
       end if;
 
 
-	  for I in 1 to 4 loop
+	  for I in 1 to 4 loop --chech if each PE has vectors to calculate. Gives out the next part of the vector or assigns new vectors to a PE 
 
 
-		if state(I) = "00000000" then
+		if state(I) = "00000000" then -- current PE hasnt assign vectors
 			if nextAdd <= lastAdd then
 				addr(I) <= nextAdd;
 				nextAdd := std_logic_vector( unsigned(nextAdd) + "00000000001");
@@ -65,7 +69,7 @@ signal state: stateRAM := (others =>  "00000000");
 			end if;
 
 
-		elsif state(I) > "10000000" then
+		elsif state(I) > "10000000" then -- current PE has complete a vector calculate
 
 			state(I) <= "00000000";
 		    resetPE <=  std_logic_vector(to_unsigned(I, 3));
@@ -77,7 +81,7 @@ signal state: stateRAM := (others =>  "00000000");
 			end if;
 
 
-		elsif state(I) > "00000000" then
+		elsif state(I) > "00000000" then --current PE has assign vectors and gets the next 8-bit
 
 			von := to_integer((unsigned(state(I)) * 8)-1);
 			bis := to_integer((unsigned(state(I))-1) * 8);
@@ -94,7 +98,7 @@ signal state: stateRAM := (others =>  "00000000");
 	  end loop;
 
 
-	  if (resetIn = '1') then
+	  if (resetIn = '1') then --Reset is 1 when all vector have been push in. Whenn all calculations are finished, the rest signal will be sent to the resetController
 		for J in 1 to 4 loop
 			tmp:= '1';
 			if state(j) > "00000000" then
