@@ -63,6 +63,7 @@ signal state: stateRAM := (others =>  "00000000");-- statuts of how much of a ve
 
 		if state(I) = "00000000" then -- current PE hasnt assign vectors
 			if nextAdd <= lastAdd then
+                resetPE <=  std_logic_vector(to_unsigned(I, 3));
 				addr(I) <= nextAdd;
 				nextAdd := std_logic_vector( unsigned(nextAdd) + "00000000001");
 				state(I) <= "00000001";
@@ -73,13 +74,6 @@ signal state: stateRAM := (others =>  "00000000");-- statuts of how much of a ve
 
 			state(I) <= "00000000";
 		    resetPE <=  std_logic_vector(to_unsigned(I, 3));
-
-			if nextAdd <= lastAdd then
-				addr(I) <= nextAdd;
-				nextAdd := std_logic_vector( unsigned(nextAdd) + "00000000001");
-				state(I)<= "00000001";
-			end if;
-
 
 		elsif state(I) > "00000000" then --current PE has assign vectors and gets the next 8-bit
 
