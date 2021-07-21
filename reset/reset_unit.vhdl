@@ -18,6 +18,8 @@ entity reset_unit is
     end reset_unit;
 
 architecture rtl of reset_unit is
+    type t_Data is array (0 to 3) of std_logic ;
+    signal r_Data : t_Data := "0000";
    begin
      process(buffer_reset)
           begin
@@ -31,40 +33,28 @@ architecture rtl of reset_unit is
 	 begin
         if rising_edge(clk) then
                     if (reg_reset = "000") then
-                        reset_PE1 <= '0';
-                        reset_PE2 <= '0';
-                        reset_PE3 <= '0';
-                        reset_PE4 <= '0';
-
+                        reset_PE1 <= r_Data(0) ;
+                        reset_PE2 <= r_Data(1);
+                        reset_PE3 <= r_Data(2);
+                        reset_PE4 <= r_Data(3);
+                                    
                     elsif (reg_reset = "001") then
-                        reset_PE1 <= '1';
-                        reset_PE2 <= '0';
-                        reset_PE3 <= '0';
-                        reset_PE4 <= '0';
+                        reset_PE1 <= not r_Data(0) ; 
+                        r_Data(0) <= not r_Data(0) ;
 
                     elsif (reg_reset = "010") then
-                        reset_PE1 <= '0';
-                        reset_PE2 <= '1';
-                        reset_PE3 <= '0';
-                        reset_PE4 <= '0';
+                        reset_PE2 <= not r_Data(1) ; 
+                        r_Data(1) <= not r_Data(1) ;
 
                     elsif (reg_reset = "011") then
-                        reset_PE1 <= '0';
-                        reset_PE2 <= '0';
-                        reset_PE3 <= '1';
-                        reset_PE4 <= '0';
+                        reset_PE3 <= not r_Data(2) ; 
+                        r_Data(2) <= not r_Data(2) ;
 
                     elsif (reg_reset = "100") then
-                        reset_PE1 <= '0';
-                        reset_PE2 <= '0';
-                        reset_PE3 <= '0';
-                        reset_PE4 <= '1';
+                        reset_PE4 <= not r_Data(3) ; 
+                        r_Data(3) <= not r_Data(3) ;
 
                     elsif (reg_reset = "111") then 
-                        reset_PE1 <= '0';
-                        reset_PE2 <= '0';
-                        reset_PE3 <= '0';
-                        reset_PE4 <= '0';
                         out_result <= '1';
 
                     end if;
