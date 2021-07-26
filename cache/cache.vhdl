@@ -24,20 +24,27 @@ begin
     begin
         if rising_edge(clk) then
             ready <= '0';
+            --if reset bit is 1 only reset the cache.
             if(reset = '1') then
                 cache_register <= b"00000000";
+            --else add input to existing value in the cache.
             else
+                --remove the sign bit from the cache and increase to the size of cache_register
                 tin := resize(unsigned(input1(2 downto 0)), cache_register'length);
                 tcache := unsigned(cache_register);
+                --if value of the input is negative some 1s have to be inserted because of 2'S complement
                 if(input1(3) = '1') then
                     tin := tin or b"11111000";
                 end if;
+                --finally add input and value in the cache.
                 tin := tin + tcache;
+                --write result to cache
                 cache_register <= std_logic_vector(tin);
             end if;
             ready <= '1';
         end if;
 
+        --output on falling edge
         if falling_edge(clk) then
             ready <= '0';
             if(reset = '0') then
@@ -45,7 +52,6 @@ begin
             end if;
             ready <= '1';
         end if;
-
     end process;
 end bhv;
 
