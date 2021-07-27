@@ -3,8 +3,22 @@ use ieee.std_logic_1164.all;
 
 entity inputController is
   port(
-    clk: in std_logic
-    
+    clk: in std_logic;
+    rst_sync: in std_logic;
+	rdy: in std_logic;
+	depthA: in Integer;
+    widthB: in integer;
+	len: in integer;
+	resetPE: out std_logic_vector(2 downto 0);
+	DataA: in std_logic_vector(2047 downto 0);
+	weA: in std_logic;
+	DataB: in std_logic_vector(2047 downto 0);
+	weB: in std_logic;
+	DataT: in std_logic_vector(15 downto 0);
+	weT: in std_logic;
+	o_A: buffer std_logic_vector(31 downto 0);
+	o_B: buffer std_logic_vector(31 downto 0);
+	o_T: buffer std_logic_vector(63 downto 0)
   );
 end;
 
@@ -72,7 +86,7 @@ component fifo
     generic(g_WIDTH : natural := 24); 
     port(
 	  i_rst_sync : in std_logic;
-      clk      : in std_logic;
+      i_clk      : in std_logic;
  
       -- FIFO Write Interface
       i_wr_en   : in  std_logic;
@@ -90,11 +104,12 @@ component fifo
 component command_cal
     port(
 	
-	i_clk: in std_logic;
+	clk: in std_logic;
     i_rdy: in std_logic;
     i_depthA: in Integer;
     i_widthB: in integer;
     o_com: buffer std_logic_vector(23 downto 0);
+	wr_en: out  std_logic;
 	i_full: in std_logic
       
     );
@@ -158,13 +173,13 @@ component controller
     );
     end component;
 
-signal we3Ac, we3Bc, weTc, weSc, weADc :std_logic;
+signal we3Ac, we3Bc, weTc, weSc, weADc, wr_enc, rd_enc, emptyc, fullc :std_logic;
 signal wdDataAc, rdAc, wdDataBc, rdBc:std_logic_vector(2047 downto 0);
 signal rdaAc, waAc, rdaBc, waBc, rdaTc, waTc:std_logic_vector(11 downto 0);
 signal wdDataTc, rdTc :std_logic_vector(15 downto 0);
 signal wdDataSc, rdSc :std_logic_vector(7 downto 0);
 signal rdaSc, waSc, rdaADc, waADc :std_logic_vector(3 downto 0);
-signal wdDataADc, rdADc :std_logic_vector(23 downto 0);
+signal wdDataADc, rdADc, wr_datac, rd_datac :std_logic_vector(23 downto 0);
 	
 begin
 
@@ -173,5 +188,8 @@ regB:  regfileB port map(clk, we3Bc, rdaBc, waBc, wdDataBc, rdBc);
 regT:  regfileT port map(clk, weTc,  rdaTc, waTc, wdDataTc, rdTc);
 regS:  regfileS port map(clk, weSc,  rdaSc, waSc, wdDataSc, rdSc);
 regAD: regfileADDR port map(clk, weADc, rdaADc, waADc, wdDataADc, rdADc);
+sig_fifo: fifo port map(rst_sync, clk, wr_enc, wr_datac, fullc, rd_enc, rd_datac, emptyc);
+comcal: command_cal port map(clk, rdy, depthA, widthB, wr_datac, wr_enc, fullc);
+con: controller port map(len, clk, rst_sync, rdy, resetPE, DataA, weA, wdDataAc, we3Ac, waAc, rdaAc, rdAc, DataB, weB, wdDataBc, we3Bc, waBc, rdaBc, rdBc, DataT, weT, wdDataTc, weTc, waTc, rdaTc, rdTc, wdDataSc, weSc, waSc, rdaSc, rdSc, wdDataADc, weADc, waADc, rdaADc, rdADc, rd_enc, rd_datac, emptyc, o_A,o_B,o_T);
 
 end;
