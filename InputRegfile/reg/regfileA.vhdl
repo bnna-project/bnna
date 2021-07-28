@@ -14,7 +14,7 @@ entity regfileA is
 end;
 
 architecture behavior of regfileA is
-  type ramtype is array (2048 downto 1) of std_logic_vector(2047 downto 0);
+  type ramtype is array (1024 downto 1) of std_logic_vector(2047 downto 0);
   signal mem: ramtype;
 begin
   process(clk) begin
