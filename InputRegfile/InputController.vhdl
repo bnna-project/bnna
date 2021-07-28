@@ -24,7 +24,7 @@ entity inputController is
     );
 end;
 
-architecture aufbau of inputController is
+architecture structure of inputController is
 
     component regfileA
         port(
