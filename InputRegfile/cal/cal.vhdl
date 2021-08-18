@@ -8,7 +8,8 @@ entity command_cal is
     i_rdy: in std_logic;
     i_depthA: in Integer;
     i_widthB: in integer;
-    o_com: buffer std_logic_vector(23 downto 0);
+    o_com: buffer std_logic_vector(19 downto 0);
+	wr_en: out  std_logic;
 	i_full: in std_logic
   );
 end;
@@ -21,20 +22,34 @@ begin
   variable deepthC, widthC: integer := 0;
   variable deepthTmp, widthTmp: integer := 1;
   begin
-   if rising_edge(clk) then --Store Data
+  
+   
+   if rising_edge(clk) then 
 		if(i_rdy = '1' and start = '0') then 
 			start := '1';
 			deepthC := i_depthA;
 			widthC := i_widthB;
 		end if;
+		
+	end if;
+	if falling_edge(clk) then
 		if(start = '1' and i_full =  '0' and deepthTmp <= deepthC ) then
-			o_com <= std_logic_vector(to_unsigned(deepthTmp, 12)) &  std_logic_vector(to_unsigned(widthTmp, 12));
+		    wr_en <= '1';
+			o_com <= std_logic_vector(to_unsigned(deepthTmp, 10)) &  std_logic_vector(to_unsigned(widthTmp, 10));
 			widthTmp := widthTmp +1;
 			if(widthTmp > widthC ) then
-				widthTmp := 0;
+				widthTmp := 1;
 				deepthTmp := deepthTmp +1;
-			end if;
+			end if;#
+		elsif(start = '1' and i_full =  '0' and deepthTmp = deepthC +1 ) then
+		
+			wr_en <= '1';
+			o_com <= "11111111111111111111";
+			deepthTmp := deepthTmp +1;
+		else 
+			wr_en <= '0';
 		end if;
+		
 	end if;
   end process;
 
