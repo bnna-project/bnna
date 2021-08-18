@@ -31,6 +31,7 @@ begin
 			widthC := i_widthB;
 		end if;
 		
+		
 	end if;
 	if falling_edge(clk) then
 		if(start = '1' and i_full =  '0' and deepthTmp <= deepthC ) then
@@ -40,7 +41,7 @@ begin
 			if(widthTmp > widthC ) then
 				widthTmp := 1;
 				deepthTmp := deepthTmp +1;
-			end if;#
+			end if;
 		elsif(start = '1' and i_full =  '0' and deepthTmp = deepthC +1 ) then
 		
 			wr_en <= '1';

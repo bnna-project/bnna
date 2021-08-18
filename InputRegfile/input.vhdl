@@ -17,7 +17,7 @@ entity inputController is
 	dep:in Integer;
 	wid:in Integer;
 	bnn_rdy: out std_logic;
-	resetPE: out std_logic_vector(2 downto 0);
+	resetPE: out std_logic_vector(4 downto 0);
 	o_A,o_B: buffer std_logic_vector(31 downto 0);
 	o_T: buffer std_logic_vector(63 downto 0);
 	outBufferIn: in std_logic
@@ -68,7 +68,7 @@ component inputBuffer
 		weA, weB, weT: in std_logic;
 		dataA, dataB: in  std_logic_vector(1023 downto 0);
 		dataT: in std_logic_vector(15 downto 0);
-		resetPE: out std_logic_vector(2 downto 0);
+		resetPE: out std_logic_vector(4 downto 0);
 		comando: in std_logic_vector(19 downto 0);
 		readCo: out std_logic;
 		empty: in std_logic;
