@@ -13,11 +13,14 @@ entity processing_unit is
         data: in std_logic_vector(NUMBER_OF_W_A -1 downto 0); --data vector
         weight: in std_logic_vector(NUMBER_OF_W_A -1 downto 0); --weight vector
         treshold: in std_logic_vector(7 downto 0); --treshold value
-        output1: out std_logic --output (0 or 1)
+        output1: out std_logic; --output (0 or 1)
+        output2 : out std_logic
     );
     end;
 
     architecture structure of processing_unit is
+        signal output_comp : std_logic;
+
         component xnor_2
         port(
             data: in std_logic;
@@ -76,7 +79,16 @@ entity processing_unit is
             comparator1: comparator port map(
                 a => cache_out,
                 b => treshold,
-                a_comp_b => output1
+                a_comp_b => output_comp
             );
+                process(output_comp)begin
+                    case output_comp is
+                        when '0' => output2 <= '1';
+                        when '1' => output2 <= '1';
+                        when others => output2 <= '-';
+                    end case;
+                end process;
+                
+                output1 <= output_comp;
 
             end;

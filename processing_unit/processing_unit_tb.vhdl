@@ -16,6 +16,7 @@ architecture test of processing_unit_tb is
     signal weight: std_logic_vector(NUMBER_OF_W_A -1 downto 0);
     signal treshold: std_logic_vector(7 downto 0);
     signal output1: std_logic;
+    signal output2 : std_logic;
 
     component processing_unit port(
         clk: in std_logic; --clock
@@ -23,7 +24,8 @@ architecture test of processing_unit_tb is
         data: in std_logic_vector(NUMBER_OF_W_A -1 downto 0); --data vector
         weight: in std_logic_vector(NUMBER_OF_W_A -1 downto 0); --weight vector
         treshold: in std_logic_vector(7 downto 0); --treshold value
-        output1: out std_logic --output (0 or 1)
+        output1: out std_logic; --output (0 or 1)
+        output2 : out std_logic
     );
     end component;
 
@@ -46,6 +48,6 @@ architecture test of processing_unit_tb is
             wait for 5 ns;
             wait;
         end process;
-        processing_unit0: processing_unit port map(clk, reset, data, weight, treshold, output1);
+        processing_unit0: processing_unit port map(clk, reset, data, weight, treshold, output1, output2);
 end test;    
         
