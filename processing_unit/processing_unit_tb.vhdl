@@ -14,7 +14,7 @@ architecture test of processing_unit_tb is
     signal clk: std_logic;
     signal data: std_logic_vector(NUMBER_OF_W_A -1 downto 0);
     signal weight: std_logic_vector(NUMBER_OF_W_A -1 downto 0);
-    signal treshold: std_logic_vector(7 downto 0);
+    signal treshold: std_logic_vector(15 downto 0);
     signal output1: std_logic;
     signal output2 : std_logic;
 
@@ -23,7 +23,7 @@ architecture test of processing_unit_tb is
         reset: in std_logic; --reset for cache
         data: in std_logic_vector(NUMBER_OF_W_A -1 downto 0); --data vector
         weight: in std_logic_vector(NUMBER_OF_W_A -1 downto 0); --weight vector
-        treshold: in std_logic_vector(7 downto 0); --treshold value
+        treshold: in std_logic_vector(15 downto 0); --treshold value
         output1: out std_logic; --output (0 or 1)
         output2 : out std_logic
     );
@@ -40,7 +40,7 @@ architecture test of processing_unit_tb is
             clk <= '0';
             data <= b"00011011";
             weight <= b"00010111";
-            treshold <= b"00000010";
+            treshold <= x"0002";
             wait for 5 ns;
             clk <= '1';
             wait for 5 ns;

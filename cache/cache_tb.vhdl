@@ -12,6 +12,7 @@ architecture test of cache_tb is
     signal reset: std_logic;
     signal clk: std_logic;
     signal input1: std_logic_vector(3 downto 0);
+    signal output1 : std_logic_vector(15 downto 0);
     --signal output1: std_logic_vector(31 downto 0);
     --signal ready: std_logic;
 
@@ -19,7 +20,7 @@ architecture test of cache_tb is
         reset: in std_logic;
         clk: in std_logic;
         input1: in std_logic_vector(3 downto 0);
-        output1: out std_logic_vector(7 downto 0);
+        output1: out std_logic_vector(15 downto 0);
         ready: out std_logic
     );
     end component;
@@ -88,6 +89,6 @@ architecture test of cache_tb is
             wait;
         end process;
         --cache0: cache port map (input1 => input1, output1 => output1, reset => reset, clk => clk, ready => ready);
-        cache0: cache port map (input1 => input1, reset => reset, clk => clk);
+        cache0: cache port map (input1 => input1, reset => reset, clk => clk, output1 => output1);
 end test;    
         
