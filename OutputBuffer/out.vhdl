@@ -10,7 +10,8 @@ entity outputBuffer is
     clk: in std_logic;
     reset: in std_logic;
     dataOut: out std_logic_vector(1023 downto 0);
-    dataIn: in std_logic_vector(7 downto 0);
+    dataIn: in std_logic_vector(3 downto 0);
+	enableIn: in std_logic_vector(3 downto 0);
 	dep, wid : in integer;
 	start:in std_logic;
 	outputAns: out std_logic:= '0'
@@ -32,9 +33,9 @@ begin
     if rising_edge(clk) then 
 		if (running  = '1') then
 		
-			for I in 1 to 4 loop
-				IF(dataIn((I*2-1)downto(I*2-1)) = "1") then
-					mem(tmpD)(tmpW) <= dataIn((I*2-2));
+			for I in 0 to 3 loop
+				IF(enableIn(I) = '1') then
+					mem(tmpD)(tmpW) <= dataIn(I);
 					tmpW := tmpW +1;
 					if tmpW >= conWidth then 
 						tmpW := 0;

@@ -9,7 +9,7 @@ entity inputBuffer is
     weA, weB, weT: in std_logic;
 	dataA, dataB: in  std_logic_vector(1023 downto 0);
 	dataT: in std_logic_vector(15 downto 0);
-	resetPE: out std_logic_vector(2 downto 0);
+	resetPE: out std_logic_vector(4 downto 0):="01111";
 	comando: in std_logic_vector(19 downto 0);
 	readCo: out std_logic;
 	empty: in std_logic;
@@ -112,9 +112,9 @@ begin
   
   
   process(clk)
-  variable von, bis, resetBL: Integer:=0;
+  variable von, bis: Integer:=0;
   variable com: std_logic_vector(19 downto 0);
-  variable allrdy: boolean;
+  variable allrdy, tmp_empty: boolean;
   
   begin
 	
@@ -122,11 +122,12 @@ begin
 		
 		if (outBufferIn = '1') then
             RESET <= '0';
-			resetPE <= "000";			
+			resetPE <= "01111";			
 		end if;
 		
 		if(running = '1') then
 			if(empty = '0') then
+				tmp_empty := false;
 				com := comando; -- 0-9 A 10-19 B comando = 0 ?
 				if (com  = (com'range => '1') ) then
 					com:= (others => '0');
@@ -134,6 +135,8 @@ begin
 				else 
 					RESET <= '0';
 				end if;
+			else
+				tmp_empty := true;
 			end if;
 			
 		
@@ -145,10 +148,10 @@ begin
 	
 	elsif falling_edge(clk) then
 		if(running = '1') then
-			report "running";
-			resetPE <= std_logic_vector(to_unsigned(0, 3));
 			
-			if(empty = '0') then
+			resetPE <= std_logic_vector(to_unsigned(0, 5));
+			
+			if(empty = '0') then --abendern
 				readCo <= '1';
 			else
 				readCo <= '0';
@@ -156,14 +159,13 @@ begin
 		
 			for I in 1 to 4 loop
 				
-				if(state(I) > std_logic_vector(to_unsigned((len/8), 8)) and resetBL = 0) then --abrunden
-					report "IF 1 ";
-					resetPE <= std_logic_vector(to_unsigned(I, 3));
-					resetBL := 1;
+				if(state(I) > std_logic_vector(to_unsigned((len/8), 8))) then --aufrunden
+					
+					resetPE(I-1) <= '1';
 					state(I) <= "00000000";
 					
 				elsif (state(I) = std_logic_vector(to_unsigned((len/8), 8)) and (len mod 8) > 0) then
-				    report "hier?";
+				    
 					von := to_integer((unsigned(state(I)) * 8)-1);
 					bis := to_integer((unsigned(state(I))-1) * 8);
 					o_T (((16*I)-1) downto ((I-1)*16))<= treshold(to_integer(unsigned(addr(I)(9 downto 0))));
@@ -172,7 +174,7 @@ begin
 				
 					
 				elsif (state(I) > std_logic_vector(to_unsigned(0, 8))) then
-					report "if 2";
+					
 					von := to_integer((unsigned(state(I)) * 8)-1);
 					bis := to_integer((unsigned(state(I))-1) * 8);
 					o_T (((16*I)-1) downto ((I-1)*16))<= treshold(to_integer(unsigned(addr(I)(9 downto 0))));
@@ -183,12 +185,12 @@ begin
 				
 				else
 					
-					if( to_integer(unsigned(com)) > 0 and resetBL = 0) then
-						report "if 3";
-						resetPE <= std_logic_vector(to_unsigned(I, 3));
+					if( to_integer(unsigned(com)) > 0 and not tmp_empty) then
+						
+						resetPE(I-1) <= '0';
 						addr(I) <= com;
 						state(I) <= "00000001";
-						resetBL := 1;
+						
 						com := std_logic_vector(to_unsigned(0, 20));
 					end if;
 					
@@ -197,7 +199,7 @@ begin
 			
 			end loop;
 			
-			resetBL := 0;
+			
 			if (RESET = '1') then
 				allrdy := true;
 				for I in 1 to 4 loop
@@ -207,7 +209,7 @@ begin
 				end loop;
 				
 				if(allrdy) then
-					resetPE <= "111";
+					resetPE <= "11111";
 				end if;
 				
 			end if;
