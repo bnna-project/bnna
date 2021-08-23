@@ -71,7 +71,7 @@ component processing_unit
         reset: in std_logic; --reset for cache
         data: in std_logic_vector(NUMBER_OF_W_A -1 downto 0); --data vector
         weight: in std_logic_vector(NUMBER_OF_W_A -1 downto 0); --weight vector
-        treshold: in std_logic_vector(7 downto 0); --treshold value
+        treshold: in std_logic_vector(15 downto 0); --treshold value
         output1: out std_logic; --output (0 or 1)
         output2 : out std_logic
     );
@@ -128,7 +128,7 @@ PE1 : processing_unit port map(
         reset => resetPE_Si(0),
         data => o_A_Si(7 downto 0),
         weight => o_B_Si(7 downto 0),
-        treshold => o_T_Si(7 downto 0),
+        treshold => o_T_Si(15 downto 0),
         output1 => dataIn_Buffer_Si(0),
 		output2 => enableIn_Buffer_Si(0)
 	);
@@ -139,7 +139,7 @@ PE2 : processing_unit port map(
         reset => resetPE_Si(1),
         data => o_A_Si(15 downto 8),
         weight => o_B_Si(15 downto 8),
-        treshold => o_T_Si(23 downto 16),
+        treshold => o_T_Si(31 downto 16),
         output1 => dataIn_Buffer_Si(1),
 		output2 => enableIn_Buffer_Si(1)
 	);
@@ -150,7 +150,7 @@ PE3 : processing_unit port map(
         reset => resetPE_Si(2),
         data => o_A_Si(23 downto 16),
         weight => o_B_Si(23 downto 16),
-        treshold => o_T_Si(39 downto 32),
+        treshold => o_T_Si(47 downto 32),
         output1 => dataIn_Buffer_Si(2),
 		output2 => enableIn_Buffer_Si(2)
 	);
@@ -162,7 +162,7 @@ PE4 : processing_unit port map(
         reset => resetPE_Si(3),
         data => o_A_Si(31 downto 24),
         weight => o_B_Si(31 downto 24),
-        treshold => o_T_Si(55 downto 48),
+        treshold => o_T_Si(63 downto 48),
         output1 => dataIn_Buffer_Si(3),
 		output2 => enableIn_Buffer_Si(3)
 	);

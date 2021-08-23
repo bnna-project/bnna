@@ -28,7 +28,7 @@ architecture behavior of outputBuffer is
 begin
   process(clk) --collets the results and stores them in order
   variable tmpW, tmpD: Integer:= 0;
-  
+ 
   begin
     if rising_edge(clk) then 
 		if (running  = '1') then
@@ -92,6 +92,8 @@ begin
 		if(reset = '1') then
 			running <= '0';
 			output <= '1';
+		else
+			output <= '0';
 		end if;
 	end if;
   end process;
