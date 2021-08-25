@@ -56,11 +56,13 @@ architecture test of cache_tb is
             input1 <= b"1010";
             clk <= '1';
             wait for 5 ns;
+            reset <= '1';
             clk <= '0';
             wait for 5 ns;
             input1 <= b"1010";
             clk <= '1';
             wait for 5 ns;
+            reset <= '0';
             clk <= '0';
             wait for 5 ns;
             input1 <= b"0111";

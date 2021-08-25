@@ -18,6 +18,7 @@ end cache;
 
 architecture bhv of cache is
     signal cache_register: std_logic_vector(N - 1 downto 0);
+    signal out1: std_logic_vector(N - 1 downto 0);
 begin
     process(clk)
     variable tin: unsigned(N - 1 downto 0) := x"0000";
@@ -25,8 +26,12 @@ begin
     begin
         if rising_edge(clk) then
             ready <= '0';
+            if(out1 /= x"0000") then
+                out1 <= x"0000";
+            end if;
             --if reset bit is 1 only reset the cache.
             if(reset = '1') then
+                out1 <= cache_register;
                 cache_register <= x"0000";
             --else add input to existing value in the cache.
             else
@@ -47,11 +52,7 @@ begin
 
         --output on falling edge
         if falling_edge(clk) then
-            ready <= '0';
-            if(reset = '0') then
-                output1 <= cache_register;
-            end if;
-            ready <= '1';
+            output1 <= out1;
         end if;
     end process;
 end bhv;
