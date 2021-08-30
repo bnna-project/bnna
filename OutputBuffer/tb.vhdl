@@ -9,11 +9,12 @@ end;
 architecture Behavioralim of testbench is
 
 component outputBuffer is
-  port (
+ port (
     clk: in std_logic;
     reset: in std_logic;
     dataOut: out std_logic_vector(1023 downto 0);
-    dataIn: in std_logic_vector(7 downto 0);
+    dataIn: in std_logic_vector(3 downto 0);
+	enableIn: in std_logic_vector(3 downto 0);
 	dep, wid : in integer;
 	start:in std_logic;
 	outputAns: out std_logic
@@ -24,7 +25,8 @@ end component;
 signal clk, reset, start, outputAns: std_logic;
 signal dep, wid : integer;
 signal dataOut: std_logic_vector(1023 downto 0);
-signal dataIn: std_logic_vector(7 downto 0);
+signal dataIn: std_logic_vector(3 downto 0);
+signal enableIn: std_logic_vector(3 downto 0);
 
 
 begin
@@ -34,6 +36,7 @@ testInput: outputBuffer port map(
 		reset,
 		dataOut,
 		dataIn,
+		enableIn,
 		dep, 
 		wid,
 		start,
@@ -47,18 +50,21 @@ testInput: outputBuffer port map(
 	dep <= 2;
 	wid <= 2;
 	start <= '1';
-	dataIn <= "00000000";
+	dataIn <= "0000";
+	enableIn <="0000";
 	wait for 10 ns;
 	clk <= '1';
 	wait for 10 ns;
 	clk <= '0';
 	start <= '0';
-	dataIn <= "10101111";
+	dataIn <= "1010";
+	enableIn <="1111";
 	wait for 10 ns;
 	clk <= '1';
 	wait for 10 ns;
 	clk <= '0';
-	dataIn <= "00000000";
+	dataIn <= "0000";
+	enableIn <="0000";
 	reset <= '1';
 	wait for 10 ns;
 	clk <= '1';
