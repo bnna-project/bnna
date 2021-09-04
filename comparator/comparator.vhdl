@@ -5,8 +5,8 @@ use ieee.numeric_std.all;
 entity comparator is
         generic(N: integer := 16);
         port(
-                a : in std_logic_vector(N-1 downto 0);
-                b : in std_logic_vector(N-1 downto 0);
+                a       : in std_logic_vector(N-1 downto 0);
+                b       : in std_logic_vector(N-1 downto 0);
                 a_comp_b : out std_logic
         );
         end comparator;
