@@ -1,6 +1,6 @@
-#Comparator
+# Comparator
 
-##Comparing register output and threshold
+## Comparing register output and threshold
 
-* ** '1' if output \geq threshold** 
-* ** else '0'**
+* **'1' if output \geq threshold** 
+* **else '0'**
