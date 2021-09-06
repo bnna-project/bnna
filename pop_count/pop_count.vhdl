@@ -8,7 +8,7 @@ use work.parameters.all;
 
 entity pop_count is
     port(
-        input1 : in slv(NUMBER_OF_W_A -1 downto 0);
+        input1  : in slv(NUMBER_OF_W_A -1 downto 0);
         output1 : out slv(NUMBER_OF_BITs_out  downto 0)
     );
     end pop_count;
@@ -16,12 +16,12 @@ entity pop_count is
 architecture rtl of pop_count is
     begin
         process(input1)
-            variable count : unsigned (NUMBER_OF_BITs_out-1 downto 0);
-            variable signal_concat : unsigned (NUMBER_OF_BITs_out -2 downto 0);
-            variable sum_pop : unsigned(NUMBER_OF_BITs_out downto 0);
-            variable number_b: unsigned(NUMBER_OF_BITs_out downto 0);
-            variable num_bits: unsigned(NUMBER_OF_BITs_out downto 0);
-            variable msb : std_logic; 
+            variable count          : unsigned (NUMBER_OF_BITs_out-1 downto 0);
+            variable signal_concat  : unsigned (NUMBER_OF_BITs_out -2 downto 0);
+            variable sum_pop        : unsigned(NUMBER_OF_BITs_out downto 0);
+            variable number_b       : unsigned(NUMBER_OF_BITs_out downto 0);
+            variable num_bits       : unsigned(NUMBER_OF_BITs_out downto 0);
+            variable msb            : std_logic; 
 
 
             begin

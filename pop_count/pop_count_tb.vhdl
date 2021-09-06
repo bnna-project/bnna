@@ -10,12 +10,12 @@ entity pop_count_tb is
 end pop_count_tb;
 
 architecture test of pop_count_tb is
-    signal xnor_o : std_logic_vector(NUMBER_OF_W_A -1 downto 0);
-    signal output1 : std_logic_vector(NUMBER_OF_BITs_out downto 0);
+    signal xnor_o   : std_logic_vector(NUMBER_OF_W_A -1 downto 0);
+    signal output1  : std_logic_vector(NUMBER_OF_BITs_out downto 0);
 
     component pop_count 
         port(
-            input1 : in std_logic_vector(NUMBER_OF_W_A -1 downto 0);
+            input1  : in std_logic_vector(NUMBER_OF_W_A -1 downto 0);
             output1 : out std_logic_vector(NUMBER_OF_BITs_out  downto 0)
         );
     end component;
