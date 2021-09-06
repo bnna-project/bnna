@@ -59,7 +59,7 @@ begin
 
                 elsif tmpW > 0 then
 
-                    dataOut(conWidth-1 downto 0) <= mem(conWidth-tmpW)(conDepth-1 downto 0);
+                    dataOut <= mem(conWidth-tmpW);
 
                     tmpW:= tmpW-1;
 

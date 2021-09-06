@@ -78,8 +78,6 @@ begin
         if rising_edge(clk) then
 
             if(weA = '1') then
-
-                report "Signal Value = " & integer'image(spA);
                 mem(spA) <= dataA;
                 spA := spA+1;
             end if;
@@ -168,9 +166,9 @@ begin
 
                         von := to_integer((unsigned(state(I)) * 8)-1);
                         bis := to_integer((unsigned(state(I))-1) * 8);
-                        o_T (((16*I)-1) downto ((I-1)*16))<= treshold(to_integer(unsigned(addr(I)(19 downto 10))));
-                        o_A(((8*I)-1) downto ((I-1)*8)) <= createFill(len mod 8) & mem(to_integer(unsigned(addr(I)(9 downto 0))))(von-(len mod 8) downto bis);
-                        o_B(((8*I)-1) downto ((I-1)*8)) <= createFillone(len mod 8) & memb(to_integer(unsigned(addr(I)(19 downto 10))))(von-(len mod 8) downto bis);
+                        o_T (((16*I)-1) downto ((I-1)*16))<= treshold(to_integer(unsigned(addr(I)(9 downto 0))));
+                        o_A(((8*I)-1) downto ((I-1)*8)) <= createFill(8-(len mod 8)) & mem(to_integer(unsigned(addr(I)(19 downto 10))))(von-(8-(len mod 8)) downto bis);
+                        o_B(((8*I)-1) downto ((I-1)*8)) <= createFillone(8-(len mod 8)) & memb(to_integer(unsigned(addr(I)(9 downto 0))))(von-(8-(len mod 8)) downto bis);
 
                         state(I) <= std_logic_vector(unsigned(state(I)) + "00000001");
 
@@ -178,10 +176,12 @@ begin
 
                         von := to_integer((unsigned(state(I)) * 8)-1);
                         bis := to_integer((unsigned(state(I))-1) * 8);
-                        o_T (((16*I)-1) downto ((I-1)*16))<= treshold(to_integer(unsigned(addr(I)(19 downto 10))));
-                        o_A(((8*I)-1) downto ((I-1)*8)) <= mem(to_integer(unsigned(addr(I)(9 downto 0))))(von downto bis);
-                        o_B(((8*I)-1) downto ((I-1)*8)) <= memb(to_integer(unsigned(addr(I)(19 downto 10))))(von downto bis);
-
+                        o_T (((16*I)-1) downto ((I-1)*16))<= treshold(to_integer(unsigned(addr(I)(9 downto 0))));
+                        o_A(((8*I)-1) downto ((I-1)*8)) <= mem(to_integer(unsigned(addr(I)(19 downto 10))))(von downto bis);
+                        o_B(((8*I)-1) downto ((I-1)*8)) <= memb(to_integer(unsigned(addr(I)(9 downto 0))))(von downto bis);
+                        report "Schleife" & integer'image(I);
+                        report "adresse von A" & integer'image(to_integer(unsigned(addr(I)(9 downto 0))));
+                        report "adresse von B" & integer'image(to_integer(unsigned(addr(I)(19 downto 10))));
                         state(I) <= std_logic_vector(unsigned(state(I)) + "00000001");
                         if (state(I) = std_logic_vector(to_unsigned(1, 8))) then
                             resetPE(I-1) <= '0';
