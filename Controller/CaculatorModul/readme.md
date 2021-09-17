@@ -1,3 +1,3 @@
 # Caculator
 
-The necessary commands for the calculations, depending on the input sizes.
+The Caculator creates necessary commands for the calculations, depending on the input sizes.
