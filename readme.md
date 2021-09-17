@@ -29,6 +29,13 @@ Also you can compile and look on wave diagrams in GTKWave with command
  
 Last file must be **testbench** !!! 
 
+### auto compiling the project
+In the compile folder is a script to compile all the components automatically. You can use it like this:
+      $ cd compile
+      $ bash auto_compile.sh
+After this you just have to compile the test benches you want to use. For example like this (you should still be in the compile folder):
+      $ bash script.sh ../BNNA/tb_presentation.vhdl
+
 ## References
 
 1. FP-BNN:  Binarized  neural  network  on  FPGA  
