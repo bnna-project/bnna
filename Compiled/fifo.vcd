@@ -1,0 +1,38 @@
+$date
+  Fri Sep 17 12:10:21 2021
+$end
+$version
+  GHDL v0
+$end
+$timescale
+  1 fs
+$end
+$var reg 1 ! reset $end
+$var reg 1 " clk $end
+$var reg 1 # enwr $end
+$var reg 24 $ datawr[23:0] $end
+$var reg 1 % full $end
+$var reg 1 & enrd $end
+$var reg 24 ' datard[23:0] $end
+$var reg 1 ( empty $end
+$comment wfbuffer is not handled $end
+$var integer 32 ) currentwr $end
+$var integer 32 * currentrd $end
+$var integer 32 + currentstored $end
+$var reg 1 , sfull $end
+$var reg 1 - sempty $end
+$enddefinitions $end
+#0
+U!
+U"
+U#
+bUUUUUUUUUUUUUUUUUUUUUUUU $
+0%
+U&
+b000000000000000000000000 '
+1(
+b0 )
+b0 *
+b0 +
+0,
+1-
