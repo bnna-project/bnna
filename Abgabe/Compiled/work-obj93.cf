@@ -1,0 +1,40 @@
+v 3
+file . "BNNA/tb_presentation.vhdl" "20210916143632.000" "20210916170842.416":
+  entity testbench at 1( 0) + 0 on 35;
+  architecture behavioralim of testbench at 9( 97) + 0 on 36;
+file . "Controller/InputComplete/input.vhdl" "20210916142240.000" "20210916170815.761":
+  entity inputcontroller at 1( 0) + 0 on 31;
+  architecture aufbau of inputcontroller at 31( 684) + 0 on 32;
+file . "Controller/CaculatorModul/cal.vhdl" "20210916132548.000" "20210916170754.427":
+  entity command_cal at 1( 0) + 0 on 27;
+  architecture behavior of command_cal at 18( 619) + 0 on 28;
+file . "Outputbuffer/out.vhdl" "20210916132428.000" "20210916170733.234":
+  entity outputbuffer at 1( 0) + 0 on 23;
+  architecture behavior of outputbuffer at 22( 713) + 0 on 24;
+file . "PUmodul/pop_count/pop_count.vhdl" "20210818113016.000" "20210916170705.419":
+  entity pop_count at 1( 0) + 0 on 19;
+  architecture rtl of pop_count at 16( 289) + 0 on 20;
+file . "PUmodul/cache/cache.vhdl" "20210825132708.000" "20210916170639.252":
+  entity cache at 1( 0) + 0 on 15;
+  architecture bhv of cache at 19( 377) + 0 on 16;
+file . "processing_unit/parameters.vhdl" "20210906162926.000" "20210916170615.549":
+  package parameters at 1( 0) + 0 on 11 body;
+  package body parameters at 18( 480) + 0 on 12;
+file . "PUmodul/xnor/xnor_2.vhdl" "20210818113016.000" "20210916170625.955":
+  entity xnor_2 at 1( 0) + 0 on 13;
+  architecture behavior of xnor_2 at 16( 220) + 0 on 14;
+file . "PUmodul/comparator/comparator.vhdl" "20210906162356.000" "20210916170649.877":
+  entity comparator at 1( 0) + 0 on 17;
+  architecture behavioral of comparator at 14( 327) + 0 on 18;
+file . "processing_unit/processing_unit.vhdl" "20210906162926.000" "20210916170722.199":
+  entity processing_unit at 1( 0) + 0 on 21;
+  architecture structure of processing_unit at 21( 578) + 0 on 22;
+file . "Controller/Controller/Controller.vhdl" "20210916135526.000" "20210916170745.184":
+  entity inputbuffer at 1( 0) + 0 on 25;
+  architecture behavior of inputbuffer at 24( 1060) + 0 on 26;
+file . "Controller/FIFO/fifo.vhdl" "20210916135522.000" "20210916170806.566":
+  entity fifo at 1( 0) + 0 on 29;
+  architecture behavior of fifo at 22( 632) + 0 on 30;
+file . "BNNA/bnn.vhdl" "20210916132820.000" "20210916170830.997":
+  entity bnn at 1( 0) + 1 on 33;
+  architecture struc of bnn at 27( 860) + 0 on 34;
