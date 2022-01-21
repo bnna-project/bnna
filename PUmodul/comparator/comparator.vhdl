@@ -26,4 +26,3 @@ architecture Behavioral of comparator is
                 end process;
 
         end Behavioral;
-    
