@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all;
 
-entity popcount2 is
+entity popcount is
   port(
     i_val       : in std_logic;
     clk         : in std_logic;
@@ -11,9 +11,9 @@ entity popcount2 is
     o_val       : out std_logic;
     stream_o  : out std_logic_vector(8 downto 0)
   );
-end popcount2;
+end popcount;
 
-architecture Behavioral of popcount2 is
+architecture Behavioral of popcount is
 
     type ram_type32 is array (31 downto 0) of std_logic_vector(1 downto 0);
     signal mem32_i      : ram_type32 := (others => (others => '0'));
@@ -192,9 +192,9 @@ begin
         begin
             if rising_edge(clk)then
                 delay_val <= delay_val(7 downto 0) & i_val;
-                if(delay_val(8) = '1')then
+                --if(delay_val(8) = '1')then
                   o_val <= delay_val(8);
-                end if;
+                --end if;
             end if;
      end process;
 
