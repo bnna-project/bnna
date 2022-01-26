@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity adder_2_7 is
+entity bnn_adder is
   generic(
           W_i : integer;
           W_o : integer);
@@ -11,9 +11,9 @@ entity adder_2_7 is
         b : in std_logic_vector(W_i-1 downto 0);
         y : out std_logic_vector(W_o-1 downto 0)
     );
- end adder_2_7;
+ end bnn_adder;
 
- architecture rtl of adder_2_7 is
+ architecture rtl of bnn_adder is
     signal slv1 : std_logic_vector(W_o-1 downto 0):=(others => '0');
     signal slv2 : std_logic_vector(W_o-1 downto 0):=(others => '0');
     begin
