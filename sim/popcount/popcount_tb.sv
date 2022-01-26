@@ -4,7 +4,7 @@ module popcount_tb();
   logic             rst;
   logic             clk;
   logic      [63:0] stream_i;
-  logic       [8:0] stream_o;
+  logic       [7:0] stream_o;
   logic             i_val;
   logic             o_val;
 
@@ -32,7 +32,7 @@ module popcount_tb();
   //
   //--------------------------------------------------------------------------------------------------------
   // 2*popcount(word) - size(word)
-  function logic [11:0] pcnt_2p_n (input logic [63:0] word);
+  function logic [7:0] pcnt_2p_n (input logic [63:0] word);
       automatic logic [11:0] res = 0;
       for (int i = 0; i < $size(word); i++) begin
         if (word[i]) begin
@@ -48,8 +48,8 @@ module popcount_tb();
   //--------------------------------------------------------------------------------------------------------
   //
   //--------------------------------------------------------------------------------------------------------
-  logic       [11:0] ref_q[$];
-  logic       [11:0] out_q[$];
+  logic       [7:0] ref_q[$];
+  logic       [7:0] out_q[$];
 
   // Output thread
   initial begin
@@ -76,6 +76,7 @@ module popcount_tb();
       // If there is the valid signal - put random value and save it to the input queue
       if (i_val) begin
         stream_i = {$urandom(), $urandom()};
+        // stream_i = 4'b11_01;
         ref_q.push_front(pcnt_2p_n(stream_i));
       end
     end

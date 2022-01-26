@@ -18,9 +18,8 @@ if { $argc < 1 } {
 
 vlib work
 # Update local files
-vcom -2008 -explicit -work work "${RTL_DIR}/adder_1_2.vhdl"
+vcom -2008 -explicit -work work "${RTL_DIR}/bnn_adder.vhdl"
 vcom -2008 -explicit -work work "${RTL_DIR}/dff_2_7.vhdl"
-vcom -2008 -explicit -work work "${RTL_DIR}/adder_2_7.vhdl"
 vcom -2008 -explicit -work work "${RTL_DIR}/substr_8.vhdl"
 vcom -2008 -explicit -work work "${RTL_DIR}/popcount.vhdl"
 

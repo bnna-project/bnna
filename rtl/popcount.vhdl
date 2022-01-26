@@ -9,7 +9,7 @@ entity popcount is
     rst         : in std_logic;
     stream_i    : in std_logic_vector(63 downto 0);
     o_val       : out std_logic;
-    stream_o  : out std_logic_vector(8 downto 0)
+    stream_o    : out std_logic_vector(7 downto 0)
   );
 end popcount;
 
@@ -39,9 +39,9 @@ architecture Behavioral of popcount is
     signal mem1_o       : std_logic_vector(6 downto 0);
 
     signal dff_stream   : std_logic_vector(63 downto 0);
-    signal P2           : std_logic_vector(7 downto 0):=(others => '0');
-    signal dff_2P       : std_logic_vector(7 downto 0):=(others => '0');
-    signal dff_substr   : std_logic_vector(8 downto 0);
+    signal sum_2p       : std_logic_vector(7 downto 0):=(others => '0');
+    signal dff_2p       : std_logic_vector(7 downto 0):=(others => '0');
+    signal dff_substr   : std_logic_vector(7 downto 0);
     signal delay_val    : std_logic_vector(8 downto 0):= (others => '0');
 
 begin
@@ -176,30 +176,33 @@ begin
         port map(
             a => mem1_o,
             b => mem1_o,
-            y => P2
+            y => sum_2p
         );
     inst_dff_7 : entity work.dff_2_7(Behavioral)
-    generic map(W => 8)
+        generic map(W => 8)
         port map(
-            d => P2,
+            d => sum_2p,
             rst => rst,
             clk => clk,
-            q => dff_2P
+            q => dff_2p
         );
 
     inst_substr_7_8: entity work.substr_8(rtl)
         port map(
-            a => dff_2P,
+            a => dff_2p,
             y => dff_substr
         );
 
      process(clk)
         begin
             if rising_edge(clk)then
-                delay_val <= delay_val(7 downto 0) & i_val;
-                --if(delay_val(8) = '1')then
-                  o_val <= delay_val(8);
-                --end if;
+                if (rst) then
+                    delay_val <= (others => '0');
+                    o_val <= '0';
+                else
+                    delay_val <= delay_val(7 downto 0) & i_val;
+                    o_val <= delay_val(8);
+                end if;
             end if;
      end process;
 
@@ -223,6 +226,5 @@ begin
 --    );
         --stream_o <= std_logic_vector(unsigned(dff_2P) - unsigned(dff_2P));
 -----------------------------------------------------------------------
-
 
 end Behavioral;
