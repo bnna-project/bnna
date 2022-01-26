@@ -49,10 +49,12 @@ architecture Behavioral of popcount is
 
 begin
     process(clk)begin
-        if rst = '1' then
-            dff_stream <= (others=>'0');
-        elsif rising_edge(clk) and i_val = '1'then
-            dff_stream <= stream_i;
+        if rising_edge(clk) then
+            if rst = '1' then
+                dff_stream <= (others=>'0');
+            elsif i_val = '1'then
+                dff_stream <= stream_i;
+            end if;
         end if;
     end process;
 
@@ -200,10 +202,12 @@ begin
 
      process(clk)
         begin
-            if rst = '1'then
-                stream_o <= (others => '0');
-            elsif rising_edge(clk) and delay_val(8) = '1'then
-                stream_o <= dff_substr;
+            if rising_edge(clk) then
+                if rst = '1'then
+                    stream_o <= (others => '0');
+                elsif delay_val(8) = '1'then
+                    stream_o <= dff_substr;
+                end if;
             end if;
      end process;
 --    inst_dff_9 : entity work.dff_2_7(Behavioral)
