@@ -26,7 +26,7 @@ module popcount_tb();
     rst = 1'b0;
   end
 
-  localparam int N_TEST_WORDS = 2;
+  localparam int N_TEST_WORDS = 1024;
 
   //--------------------------------------------------------------------------------------------------------
   //
@@ -71,12 +71,11 @@ module popcount_tb();
 
     repeat(N_TEST_WORDS) begin
       @(posedge clk);
-      i_val = 1'b1;//$random(); // set random valid signal
+      i_val = $random(); // set random valid signal
 
       // If there is the valid signal - put random value and save it to the input queue
       if (i_val) begin
         stream_i = {$urandom(), $urandom()};
-        // stream_i = 4'b11_01;
         ref_q.push_front(pcnt_2p_n(stream_i));
       end
     end
