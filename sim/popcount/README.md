@@ -17,9 +17,9 @@ The testbench is using System Verilog language features. Means there are some re
 
 From ModelSim command line:
 
-cd <repo>/sim/popcount
-do sim.do sim
-do wave.do
-do sim.do; run -all
+- `cd <repo>/sim/popcount`
+- `do sim.do sim`
+- `do wave.do` - if you'd like to get waveforms
+- `do sim.do; run -all`
 
-Number of words for test popcount_tb.sv -> N_TEST_WORDS;
+Number of words for test `popcount_tb.sv -> N_TEST_WORDS;`
