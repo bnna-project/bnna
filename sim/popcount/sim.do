@@ -24,7 +24,8 @@ vcom -2008 -explicit -work work "${RTL_DIR}/adder_2_7.vhdl"
 vcom -2008 -explicit -work work "${RTL_DIR}/substr_8.vhdl"
 vcom -2008 -explicit -work work "${RTL_DIR}/popcount.vhdl"
 
-vcom -2008 -explicit -work work "${TB_DIR}/popcount_tb.vhdl"
+# vcom -2008 -explicit -work work "${TB_DIR}/popcount_tb.sv"
+vlog +incdir+$RTL_DIR -work work -sv $TB_DIR/popcount_tb.sv
 
 # If recompiling - recreate all libraries. Else - just restart
 if { $flag_restart == 1 } {
