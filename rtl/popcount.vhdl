@@ -42,7 +42,7 @@ architecture Behavioral of popcount is
     signal sum_2p       : std_logic_vector(7 downto 0):=(others => '0');
     signal dff_2p       : std_logic_vector(7 downto 0):=(others => '0');
     signal dff_substr   : std_logic_vector(7 downto 0);
-    signal delay_val    : std_logic_vector(8 downto 0):= (others => '0');
+    signal delay_val    : std_logic_vector(7 downto 0):= (others => '0');
 
 begin
     process(clk)begin
@@ -200,8 +200,8 @@ begin
                     delay_val <= (others => '0');
                     o_val <= '0';
                 else
-                    delay_val <= delay_val(7 downto 0) & i_val;
-                    o_val <= delay_val(8);
+                    delay_val <= delay_val(6 downto 0) & i_val;
+                    o_val <= delay_val(7);
                 end if;
             end if;
      end process;
@@ -211,20 +211,10 @@ begin
             if rising_edge(clk) then
                 if rst = '1'then
                     stream_o <= (others => '0');
-                elsif delay_val(8) = '1'then
+                elsif delay_val(7) then
                     stream_o <= dff_substr;
                 end if;
             end if;
      end process;
---    inst_dff_9 : entity work.dff_2_7(Behavioral)
---    generic map(W => 9)
---    port map(
---        d => dff_substr,
---        rst => rst,
---        clk => clk,
---        q => stream_o
---    );
-        --stream_o <= std_logic_vector(unsigned(dff_2P) - unsigned(dff_2P));
------------------------------------------------------------------------
 
 end Behavioral;
