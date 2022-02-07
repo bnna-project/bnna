@@ -10,7 +10,7 @@ entity cache is
     port(
         reset: in std_logic;
         clk: in std_logic;
-        input1: in std_logic_vector(3 downto 0);
+        input1: in std_logic_vector(7 downto 0);
         output1: out std_logic_vector(N - 1 downto 0);
         ready: out std_logic
     );
@@ -21,8 +21,8 @@ architecture bhv of cache is
     signal out1: std_logic_vector(N - 1 downto 0);
 begin
     process(clk)
-    variable tin: unsigned(N - 1 downto 0) := x"0000";
-    variable tcache: unsigned(N - 1 downto 0) := x"0000";
+        variable tin: unsigned(N - 1 downto 0) := x"0000";
+        variable tcache: unsigned(N - 1 downto 0) := x"0000";
     begin
         if rising_edge(clk) then
             ready <= '0';
@@ -36,7 +36,7 @@ begin
             --else add input to existing value in the cache.
             else
                 --remove the sign bit from the cache and increase to the size of cache_register
-                tin := resize(unsigned(input1(2 downto 0)), cache_register'length);
+                tin := resize(unsigned(input1(2 downto 0)), tin'length);
                 tcache := unsigned(cache_register);
                 --if value of the input is negative some 1s have to be inserted because of 2'S complement
                 if(input1(3) = '1') then
@@ -51,10 +51,9 @@ begin
         end if;
 
         --output on falling edge
-        if falling_edge(clk) then
+        if falling_edge(clk) then -- fixme
             output1 <= out1;
         end if;
     end process;
+
 end bhv;
-
-

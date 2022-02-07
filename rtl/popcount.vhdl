@@ -57,143 +57,148 @@ begin
 
     gen_1 : for i in 0 to 31 generate
         inst_adder_1:  entity work.bnn_adder(rtl)
-            generic map(W_i => 1,
-                        W_o => 2)
-            port map(
-                a => (0 => dff_stream(i*2)),
-                b => (0 => dff_stream(i*2+1)),
-                y => mem32_i(i)
-            );
+        generic map(W_i => 1,
+                    W_o => 2)
+        port map(
+            a => (0 => dff_stream(i*2)),
+            b => (0 => dff_stream(i*2+1)),
+            y => mem32_i(i)
+        );
 
         inst_dff_1 : entity work.dff_2_7(Behavioral)
-            generic map(W => 2)
-            port map(
-                d => mem32_i(i),
-                rst => rst,
-                clk => clk,
-                q => mem32_o(i)
-            );
+        generic map(W => 2)
+        port map(
+            d => mem32_i(i),
+            rst => rst,
+            clk => clk,
+            q => mem32_o(i)
+        );
     end generate;
 
     gen_2 : for i in 0 to 15 generate
         inst_adder_2 :  entity work.bnn_adder(rtl)
-            generic map(W_i => 2,
-                        W_o => 3)
-            port map(
-                a => mem32_o(i*2),
-                b => mem32_o(i*2 +1),
-                y => mem16_i(i)
-            );
+        generic map(W_i => 2,
+                    W_o => 3)
+        port map(
+            a => mem32_o(i*2),
+            b => mem32_o(i*2 +1),
+            y => mem16_i(i)
+        );
+
         inst_dff_2 : entity work.dff_2_7(Behavioral)
-            generic map(W => 3)
-            port map(
-                d => mem16_i(i),
-                rst => rst,
-                clk => clk,
-                q => mem16_o(i)
-            );
+        generic map(W => 3)
+        port map(
+            d => mem16_i(i),
+            rst => rst,
+            clk => clk,
+            q => mem16_o(i)
+        );
     end generate;
 
-    gen_add_3 : for i in 0 to 7 generate
+    gen_3 : for i in 0 to 7 generate
         inst_adder_3 : entity work.bnn_adder(rtl)
-            generic map(W_i => 3,
-                        W_o => 4)
-            port map(
-                a => mem16_o(i*2),
-                b => mem16_o(i*2+1),
-                y => mem8_i(i)
-            );
+        generic map(W_i => 3,
+                    W_o => 4)
+        port map(
+            a => mem16_o(i*2),
+            b => mem16_o(i*2+1),
+            y => mem8_i(i)
+        );
         inst_dff_3 : entity work.dff_2_7(Behavioral)
-            generic map(W => 4)
-            port map(
-                d => mem8_i(i),
-                rst => rst,
-                clk => clk,
-                q => mem8_o(i)
-            );
+        generic map(W => 4)
+        port map(
+            d => mem8_i(i),
+            rst => rst,
+            clk => clk,
+            q => mem8_o(i)
+        );
     end generate;
 
-    gen_add_4 : for i in 0 to 3 generate
+    gen_4 : for i in 0 to 3 generate
         inst_adder_4 : entity work.bnn_adder(rtl)
-            generic map (W_i => 4,
-                         W_o => 5)
-            port map(
-                a => mem8_o(i*2),
-                b => mem8_o(i*2+1),
-                y => mem4_i(i)
-            );
+        generic map (W_i => 4,
+                     W_o => 5)
+        port map(
+            a => mem8_o(i*2),
+            b => mem8_o(i*2+1),
+            y => mem4_i(i)
+        );
+
         inst_dff_4 : entity work.dff_2_7(Behavioral)
-            generic map(W => 5)
-            port map(
-                d => mem4_i(i),
-                rst => rst,
-                clk => clk,
-                q => mem4_o(i)
-            );
+        generic map(W => 5)
+        port map(
+            d => mem4_i(i),
+            rst => rst,
+            clk => clk,
+            q => mem4_o(i)
+        );
     end generate;
 
-    gen_add_5 : for i in 0 to 1 generate
+    gen_5 : for i in 0 to 1 generate
         inst_adder_5 : entity work.bnn_adder(rtl)
-            generic map(W_i => 5,
-                        W_o => 6)
-            port map(
-                a => mem4_o(i*2),
-                b => mem4_o(i*2+1),
-                y => mem2_i(i)
-            );
+        generic map(W_i => 5,
+                    W_o => 6)
+        port map(
+            a => mem4_o(i*2),
+            b => mem4_o(i*2+1),
+            y => mem2_i(i)
+        );
+
         inst_dff_5 : entity work.dff_2_7(Behavioral)
-            generic map(W => 6)
-            port map(
-                d => mem2_i(i),
-                rst => rst,
-                clk => clk,
-                q => mem2_o(i)
-            );
+        generic map(W => 6)
+        port map(
+            d => mem2_i(i),
+            rst => rst,
+            clk => clk,
+            q => mem2_o(i)
+        );
     end generate;
 
     inst_adder_6 : entity work.bnn_adder(rtl)
-        generic map(W_i => 6,
-                    W_o => 7)
-        port map(
-            a => mem2_o(0),
-            b => mem2_o(1),
-            y => mem1_i
-        );
+    generic map(W_i => 6,
+                W_o => 7)
+    port map(
+        a => mem2_o(0),
+        b => mem2_o(1),
+        y => mem1_i
+    );
+
     inst_dff_6 : entity work.dff_2_7(Behavioral)
-        generic map(W => 7)
-        port map(
-            d => mem1_i,
-            rst => rst,
-            clk => clk,
-            q => mem1_o
-        );
+    generic map(W => 7)
+    port map(
+        d => mem1_i,
+        rst => rst,
+        clk => clk,
+        q => mem1_o
+    );
     
     ---------------------------------------------------------------------
     --2P-N
     inst_adder_7 : entity work.bnn_adder(rtl)
-        generic map(W_i => 7,
-                    W_o => 8)
-        port map(
-            a => mem1_o,
-            b => mem1_o,
-            y => sum_2p
-        );
+    generic map(W_i => 7,
+                W_o => 8)
+    port map(
+        a => mem1_o,
+        b => mem1_o,
+        y => sum_2p
+    );
+
     inst_dff_7 : entity work.dff_2_7(Behavioral)
-        generic map(W => 8)
-        port map(
-            d => sum_2p,
-            rst => rst,
-            clk => clk,
-            q => dff_2p
-        );
+    generic map(W => 8)
+    port map(
+        d => sum_2p,
+        rst => rst,
+        clk => clk,
+        q => dff_2p
+    );
 
     inst_substr_7_8: entity work.substr_8(rtl)
-        port map(
-            a => dff_2p,
-            y => dff_substr
-        );
+    port map(
+        a => dff_2p,
+        y => dff_substr
+    );
 
-     process(clk)
+    process(clk)
         begin
             if rising_edge(clk)then
                 if (rst) then
@@ -204,9 +209,9 @@ begin
                     o_val <= delay_val(7);
                 end if;
             end if;
-     end process;
+    end process;
 
-     process(clk)
+    process(clk)
         begin
             if rising_edge(clk) then
                 if rst = '1'then
@@ -215,6 +220,6 @@ begin
                     stream_o <= dff_substr;
                 end if;
             end if;
-     end process;
+    end process;
 
 end Behavioral;

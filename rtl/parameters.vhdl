@@ -4,15 +4,7 @@ use IEEE.numeric_std.all;
         
 
 package parameters is
-
-    constant NUMBER_OF_W_A : natural := 8; -- W: weights, A : activates;
     function f_log2(x:positive)return natural;
-    constant NUMBER_OF_BITs_out : natural := f_log2(NUMBER_OF_W_A);
-    
-    -- An alias is an alternative name for an existing object (signal, variable or constant).
-    alias sl is std_logic;              
-    alias slv is std_logic_vector;
-
 end package;
 
 package body parameters is
@@ -25,4 +17,11 @@ package body parameters is
             end loop;
             return i;
         end function;
+
+    constant NUMBER_OF_W_A : natural := 8; -- W: weights, A : activates;
+    constant NUMBER_OF_BITs_out : natural := f_log2(NUMBER_OF_W_A);
+
+    -- An alias is an alternative name for an existing object (signal, variable or constant).
+    alias sl is std_logic;              
+    alias slv is std_logic_vector;
 end package body parameters;
