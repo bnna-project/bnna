@@ -1,0 +1,7 @@
+v 4
+file . "comparator_tb.vhdl" "c8c3ff85f2f37d4de9919dc5ce91f8b815706007" "20220131204629.724":
+  entity comparator_tb at 1( 0) + 0 on 129;
+  architecture test of comparator_tb at 7( 88) + 0 on 130;
+file . "comparator.vhdl" "2379167238afc0c29c3ddab6d1ecd150d9eb1ead" "20220131204629.654":
+  entity comparator at 1( 0) + 0 on 127;
+  architecture rtl of comparator at 18( 571) + 0 on 128;

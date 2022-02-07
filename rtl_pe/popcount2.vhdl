@@ -13,7 +13,7 @@ entity popcount2 is
   );
 end popcount2;
 
-architecture Behavioral of popcount2 is
+architecture rtl of popcount2 is
 
     type ram_type32 is array (31 downto 0) of std_logic_vector(1 downto 0);
     signal mem32_i      : ram_type32 := (others => (others => '0'));
@@ -193,8 +193,8 @@ begin
         begin
             if rising_edge(clk)then
                 delay_val <= delay_val(7 downto 0) & i_val;
-                if(delay_val(8) = '1')then
-                  o_val <= delay_val(8);
+                if(delay_val(7) = '1')then
+                  o_val <= delay_val(1);
                 end if;
             end if;
      end process;
@@ -203,7 +203,7 @@ begin
         begin
             if rst = '1'then
                 stream_o <= (others => '0');
-            elsif rising_edge(clk) and delay_val(8) = '1'then
+            elsif rising_edge(clk) and delay_val(7) = '1'then
                 stream_o <= dff_substr;
             end if;
      end process;
@@ -219,4 +219,4 @@ begin
 -----------------------------------------------------------------------
 
 
-end Behavioral;
+end rtl;
