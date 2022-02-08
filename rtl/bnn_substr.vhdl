@@ -2,15 +2,15 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity substr_8 is
+entity bnn_substr is
   port(
     a : in std_logic_vector(7 downto 0);
     b : in std_logic_vector(7 downto 0);
     y : out std_logic_vector(8 downto 0)
   );
-end substr_8;
+end bnn_substr;
 
-architecture rtl of substr_8 is
+architecture rtl of bnn_substr is
 
     signal a_extended : std_logic_vector(8 downto 0):= (others => '0');
     signal b_extended : std_logic_vector(8 downto 0):= (others => '0');

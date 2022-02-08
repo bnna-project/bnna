@@ -52,7 +52,7 @@ architecture struct of pe is
     end process;
 
     xnor_gen : for i in 0 to 63 generate
-        inst_xnor : entity work.xnor_2(rtl)
+        inst_xnor : entity work.bnn_xnor(rtl)
           port map(
             data    => first_dff_data_pe(i),
             weight  => first_dff_weights_pe(i),
@@ -68,7 +68,7 @@ architecture struct of pe is
             end if;
     end process;
 
-    inst_bnn_popcount : entity work.popcount2(rtl)
+    inst_bnn_popcount : entity work.popcount(rtl)
         port map(
             i_val       => o_val_xnor,
             clk         => clk,

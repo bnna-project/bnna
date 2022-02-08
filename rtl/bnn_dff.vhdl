@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 
-entity dff_2_7 is
+entity bnn_dff is
    generic(
       W : integer:=2
    );
@@ -12,9 +12,9 @@ entity dff_2_7 is
         clk : in std_logic;
         q   : out std_logic_vector(W-1 downto 0)
     );
-end dff_2_7;
+end bnn_dff;
 
-architecture Behavioral of dff_2_7 is
+architecture Behavioral of bnn_dff is
 
 begin
     process(clk)begin
