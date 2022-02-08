@@ -21,11 +21,9 @@ VHDL_SOURCES += $(PWD)/../../rtl/$(DUT).vhdl
 
 
 ifeq ($(SIM), ghdl)
-# 	SIM_ARGS += -v
-	COMPILE_ARGS += -v
-# 	ifeq ($(WAVES), 1)
-# 		SIM_ARGS += --vcd=$(TOPLEVEL).vcd
-# 	endif
+	ifeq ($(WAVES), 1)
+		SIM_ARGS += --vcd=$(TOPLEVEL).vcd
+	endif
 endif
 
 

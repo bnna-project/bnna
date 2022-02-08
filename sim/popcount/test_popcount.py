@@ -26,16 +26,26 @@ class TB(object):
         cocotb.fork(Clock(dut.clk, 2, units="ns").start())
 
     async def reset(self):
-        tb.log.info("Reset")
-        # self.dut.rst.setimmediatevalue(0)
-        # await RisingEdge(self.dut.clk)
-        # await RisingEdge(self.dut.clk)
-        # self.dut.rst.value = 1
-        # await RisingEdge(self.dut.clk)
-        # await RisingEdge(self.dut.clk)
-        # self.dut.rst.value = 0
-        # await RisingEdge(self.dut.clk)
-        # await RisingEdge(self.dut.clk)
+        self.dut.rst.setimmediatevalue(1)
+        await RisingEdge(self.dut.clk)
+        await RisingEdge(self.dut.clk)
+        self.dut.rst.value = 0
+        await RisingEdge(self.dut.clk)
+        await RisingEdge(self.dut.clk)
+
+
+#----------------------------------------------------------------------------------
+#
+#----------------------------------------------------------------------------------
+def pcnt_2p_n(sample):
+    bit_cnt = 0
+    for i in len(sample):
+        if ((sample >> i) & 0x1):
+            bit_cnt += 1
+
+    double_p = bit_cnt << 1
+    double_pn = double_p - len(sample)
+    return double_pn
 
 
 #----------------------------------------------------------------------------------
@@ -43,29 +53,34 @@ class TB(object):
 #----------------------------------------------------------------------------------
 async def run_test_tx(dut, payload_lengths=None, payload_data=None):
     tb = TB(dut)
-    # await tb.reset()
+    await tb.reset()
 
-    # for test_data in [payload_data(x) for x in payload_lengths()]:
+    dut.i_val.value = 0
+    dut.stream_i.value = 0
 
-    #     # for word in test_data:
-    #     #     await RisingEdge(dut.clk)
-    #     #     dut.stream_i = word
+    for test_data in [payload_data(x) for x in payload_lengths()]:
+        
+        tx_data = list()
+        for word in test_data:
+            await RisingEdge(dut.clk)
+            dut.i_val.value = 1
+            dut.stream_i.value = word
+            tx_data.append(word)
+        await RisingEdge(dut.clk)
+        dut.i_val.value = 0
 
-    #     # encoded_data = cobs_encode(test_data)+b'\00'
-    #     # await tb.axi_source.write(test_data)
+        rx_data = list()
+        while len(rx_data) < int(len(tx_data)):
+            await RisingEdge(dut.clk)
+            if (dut.o_val.value):
+                rx_data.append(dut.stream_o.value)
 
-    #     # rx_data = bytearray()
-    #     # while len(rx_data) < int(len(encoded_data)):
-    #     #     rx_data.extend(await tb.uart_sink.read())
+        tb.log.info("TX data: %s", tx_data)
+        tb.log.info("RX data: %s", rx_data)
 
-    #     # tb.log.info("Sended data: %s", test_data)
-    #     # tb.log.info("Received (encoded) data: %s", rx_data)
-    #     # tb.log.info("Parsed data: %s", cobs_decode(rx_data[:-1]))
+        # assert ctx_data == rx_data
 
-    #     # assert tb.uart_sink.empty()
-    #     # assert cobs_decode(rx_data[:-1]) == test_data
-
-    #     await Timer(1, 'us')
+        await Timer(1, 'us')
 
     await RisingEdge(dut.clk)
     await RisingEdge(dut.clk)
@@ -116,7 +131,7 @@ if cocotb.SIM_NAME:
     #     factory.add_option("payload_lengths", [size_list])
     #     factory.add_option("payload_data", [incrementing_payload, prbs_payload])
     #     factory.generate_tests()
-    factory = TestFactory(test)
+    factory = TestFactory(run_test_tx)
     factory.add_option("payload_lengths", [size_list])
     factory.add_option("payload_data", [incrementing_payload])
     factory.generate_tests()
