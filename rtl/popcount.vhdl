@@ -48,11 +48,13 @@ architecture rtl of popcount is
 
 
 begin
-    process(clk)begin
-        if rst = '1' then
-            dff_stream <= (others=>'0');
-        elsif rising_edge(clk) and i_val = '1'then
-            dff_stream <= stream_i;
+    process (clk) begin
+        if rising_edge(clk) then
+            if rst = '1' then
+                dff_stream <= (others=>'0');
+            elsif i_val = '1' then
+                dff_stream <= stream_i;
+            end if;
         end if;
     end process;
 
@@ -167,9 +169,11 @@ begin
             clk => clk,
             q => mem1_o
         );
----------------------------------------------------------------------
-        --2P-N
-     inst_adder_7_8 : entity work.bnn_adder(rtl)
+    -- 7 bit
+
+    ---------------------------------------------------------------------
+    --2P-N
+    inst_adder_7_8 : entity work.bnn_adder(rtl)
         generic map(W_i => 7,
                     W_o => 8)
         port map(
@@ -185,15 +189,20 @@ begin
         clk => clk,
         q => dff_2P
     );
+    -- 8 bit
+
     inst_substr_7_8: entity work.bnn_substr(rtl)
         port map(
             a => dff_2P,
             b => x"40",
             y => dff_substr
         );
+
      process(clk)
         begin
             if rising_edge(clk)then
+                -- fixme reset
+                -- fixme o_val incorrect mask
                 delay_val <= delay_val(7 downto 0) & i_val;
                 if(delay_val(7) = '1')then
                   o_val <= delay_val(1);
@@ -201,24 +210,13 @@ begin
             end if;
      end process;
 
-     process(clk)
+     process(clk) -- fixme async reset
         begin
-            if rst = '1'then
+            if rst = '1' then
                 stream_o <= (others => '0');
             elsif rising_edge(clk) and delay_val(7) = '1'then
                 stream_o <= dff_substr;
             end if;
      end process;
---    inst_dff_9 : entity work.bnn_dff(Behavioral)
---    generic map(W => 9)
---    port map(
---        d => dff_substr,
---        rst => rst,
---        clk => clk,
---        q => stream_o
---    );
-        --stream_o <= std_logic_vector(unsigned(dff_2P) - unsigned(dff_2P));
------------------------------------------------------------------------
-
 
 end rtl;

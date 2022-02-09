@@ -44,7 +44,7 @@ architecture test of pe_tb is
         end loop;
         wait;
       end process;
-
+      
       process begin
         i_val_outside <= '1';
         data          <= b"0000_0000_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111";
