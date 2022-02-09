@@ -39,19 +39,45 @@ class TB(object):
 #----------------------------------------------------------------------------------
 def pcnt_2p_n(sample):
     bit_cnt = 0
-    for i in len(sample):
-        if ((sample >> i) & 0x1):
+    for i in range(len(sample)):
+        if (sample[i] == "1"):
             bit_cnt += 1
 
     double_p = bit_cnt << 1
     double_pn = double_p - len(sample)
+
     return double_pn
 
 
 #----------------------------------------------------------------------------------
 #
 #----------------------------------------------------------------------------------
-async def run_test_tx(dut, payload_lengths=None, payload_data=None):
+async def get_data(dut, size, rx_data):
+    while len(rx_data) < size:
+        await RisingEdge(dut.clk)
+        if (dut.o_val.value):
+            rx_data.append(dut.stream_o.value.signed_integer)
+
+
+#----------------------------------------------------------------------------------
+#
+#----------------------------------------------------------------------------------
+async def run_data(dut, test_data, tx_data):
+    for word in test_data:
+        await RisingEdge(dut.clk)
+        dut.i_val.value = 1
+        dut.stream_i.value = word
+
+        if (dut.i_val.value):
+            tx_data.append(pcnt_2p_n(dut.stream_i.value.binstr))
+
+    dut.i_val.value = 0
+
+
+#----------------------------------------------------------------------------------
+#
+#----------------------------------------------------------------------------------
+async def run_test(dut, payload_lengths=None, payload_data=None):
     tb = TB(dut)
     await tb.reset()
 
@@ -59,28 +85,18 @@ async def run_test_tx(dut, payload_lengths=None, payload_data=None):
     dut.stream_i.value = 0
 
     for test_data in [payload_data(x) for x in payload_lengths()]:
-        
         tx_data = list()
-        for word in test_data:
-            await RisingEdge(dut.clk)
-            dut.i_val.value = 1
-            dut.stream_i.value = word
-            tx_data.append(word)
-        await RisingEdge(dut.clk)
-        dut.i_val.value = 0
-
         rx_data = list()
-        while len(rx_data) < int(len(tx_data)):
-            await RisingEdge(dut.clk)
-            if (dut.o_val.value):
-                rx_data.append(dut.stream_o.value)
+
+        await cocotb.start(run_data(dut, test_data, tx_data))
+        # await cocotb.start(get_data(dut, len(test_data), rx_data))
+
+        await Timer(3, 'us')
 
         tb.log.info("TX data: %s", tx_data)
-        tb.log.info("RX data: %s", rx_data)
+        # tb.log.info("RX data: %s", rx_data)
 
-        # assert ctx_data == rx_data
-
-        await Timer(1, 'us')
+        # assert tx_data == rx_data
 
     await RisingEdge(dut.clk)
     await RisingEdge(dut.clk)
@@ -89,22 +105,22 @@ async def run_test_tx(dut, payload_lengths=None, payload_data=None):
 #----------------------------------------------------------------------------------
 #
 #----------------------------------------------------------------------------------
-def prbs31(state=0x7fffffff):
+def prbs63(state=0x7fffffffffffffff):
     while True:
-        for i in range(8):
-            if bool(state & 0x08000000) ^ bool(state & 0x40000000):
-                state = ((state & 0x3fffffff) << 1) | 1
+        for i in range(64):
+            if bool(state & 0x08000000000000) ^ bool(state & 0x4000000000000000):
+                state = ((state & 0x3fffffffffffffff) << 1) | 1
             else:
-                state = (state & 0x3fffffff) << 1
-        yield state & 0xff
+                state = (state & 0x3fffffffffffffff) << 1
+        yield state & 0xffffffffffffffff
 
 
 #----------------------------------------------------------------------------------
 #
 #----------------------------------------------------------------------------------
 def prbs_payload(length):
-    gen = prbs31()
-    return bytearray([next(gen) for x in range(length)])
+    gen = prbs63()
+    return [next(gen) for x in range(length)]
 
 
 #----------------------------------------------------------------------------------
@@ -126,12 +142,7 @@ def size_list():
 #----------------------------------------------------------------------------------
 # cocotb-test
 if cocotb.SIM_NAME:
-    # for test in [run_test_rx, run_test_rx]:
-    #     factory = TestFactory(test)
-    #     factory.add_option("payload_lengths", [size_list])
-    #     factory.add_option("payload_data", [incrementing_payload, prbs_payload])
-    #     factory.generate_tests()
-    factory = TestFactory(run_test_tx)
+    factory = TestFactory(run_test)
     factory.add_option("payload_lengths", [size_list])
-    factory.add_option("payload_data", [incrementing_payload])
+    factory.add_option("payload_data", [incrementing_payload, prbs_payload])
     factory.generate_tests()
