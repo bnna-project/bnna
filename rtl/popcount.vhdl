@@ -9,11 +9,11 @@ entity popcount is
     rst         : in std_logic;
     stream_i    : in std_logic_vector(63 downto 0);
     o_val       : out std_logic;
-    stream_o    : out std_logic_vector(7 downto 0)
+    stream_o    : out std_logic_vector(8 downto 0)
   );
 end popcount;
 
-architecture Behavioral of popcount is
+architecture rtl of popcount is
 
     type ram_type32 is array (31 downto 0) of std_logic_vector(1 downto 0);
     signal mem32_i      : ram_type32 := (others => (others => '0'));
@@ -35,38 +35,40 @@ architecture Behavioral of popcount is
     signal mem2_i       : ram_type2 := (others => (others => '0'));
     signal mem2_o       : ram_type2 := (others => (others => '0'));
 
+    type ram_type1 is array (0 downto 0) of std_logic_vector(6 downto 0);
     signal mem1_i       : std_logic_vector(6 downto 0);
     signal mem1_o       : std_logic_vector(6 downto 0);
 
     signal dff_stream   : std_logic_vector(63 downto 0);
-    signal sum_2p       : std_logic_vector(7 downto 0):=(others => '0');
-    signal dff_2p       : std_logic_vector(7 downto 0):=(others => '0');
-    signal dff_substr   : std_logic_vector(7 downto 0);
-    signal delay_val    : std_logic_vector(7 downto 0):= (others => '0');
+    signal P2           : std_logic_vector(7 downto 0):=(others => '0');
+    signal dff_2P       : std_logic_vector(7 downto 0):=(others => '0');
+    signal dff_substr   : std_logic_vector(8 downto 0);
+    signal delay_val    : std_logic_vector(8 downto 0):= (others => '0');
+
+
 
 begin
-    process(clk)begin
+    process (clk) begin
         if rising_edge(clk) then
             if rst = '1' then
                 dff_stream <= (others=>'0');
-            elsif i_val = '1'then
+            elsif i_val = '1' then
                 dff_stream <= stream_i;
             end if;
         end if;
     end process;
 
-    gen_1 : for i in 0 to 31 generate
-        inst_adder_1:  entity work.bnn_adder(rtl)
-        generic map(W_i => 1,
-                    W_o => 2)
-        port map(
-            a => (0 => dff_stream(i*2)),
-            b => (0 => dff_stream(i*2+1)),
-            y => mem32_i(i)
-        );
-
-        inst_dff_1 : entity work.dff_2_7(Behavioral)
-        generic map(W => 2)
+    gen_add_1_2 : for i in 0 to 31 generate
+        inst_adder_1_2:  entity work.bnn_adder(rtl)
+            generic map(W_i => 1,
+                        W_o => 2)
+            port map(
+                a(0) => dff_stream(i*2),
+                b(0) => dff_stream(i*2+1),
+                y => mem32_i(i)
+            );
+       inst_dff_2 : entity work.bnn_dff(Behavioral)
+       generic map(W => 2)
         port map(
             d => mem32_i(i),
             rst => rst,
@@ -75,17 +77,16 @@ begin
         );
     end generate;
 
-    gen_2 : for i in 0 to 15 generate
-        inst_adder_2 :  entity work.bnn_adder(rtl)
-        generic map(W_i => 2,
-                    W_o => 3)
-        port map(
-            a => mem32_o(i*2),
-            b => mem32_o(i*2 +1),
-            y => mem16_i(i)
-        );
-
-        inst_dff_2 : entity work.dff_2_7(Behavioral)
+    gen_add_2_3 : for i in 0 to 15 generate
+        inst_adder_2_3 :  entity work.bnn_adder(rtl)
+            generic map(W_i => 2,
+                        W_o => 3)
+            port map(
+                a => mem32_o(i*2),
+                b => mem32_o(i*2 +1),
+                y => mem16_i(i)
+            );
+        inst_dff_3 : entity work.bnn_dff(Behavioral)
         generic map(W => 3)
         port map(
             d => mem16_i(i),
@@ -95,16 +96,16 @@ begin
         );
     end generate;
 
-    gen_3 : for i in 0 to 7 generate
-        inst_adder_3 : entity work.bnn_adder(rtl)
-        generic map(W_i => 3,
-                    W_o => 4)
-        port map(
-            a => mem16_o(i*2),
-            b => mem16_o(i*2+1),
-            y => mem8_i(i)
-        );
-        inst_dff_3 : entity work.dff_2_7(Behavioral)
+    gen_add_3_4 : for i in 0 to 7 generate
+        inst_adder_3_4 : entity work.bnn_adder(rtl)
+            generic map(W_i => 3,
+                        W_o => 4)
+            port map(
+                a => mem16_o(i*2),
+                b => mem16_o(i*2+1),
+                y => mem8_i(i)
+            );
+        inst_dff_4 : entity work.bnn_dff(Behavioral)
         generic map(W => 4)
         port map(
             d => mem8_i(i),
@@ -114,17 +115,16 @@ begin
         );
     end generate;
 
-    gen_4 : for i in 0 to 3 generate
-        inst_adder_4 : entity work.bnn_adder(rtl)
-        generic map (W_i => 4,
-                     W_o => 5)
-        port map(
-            a => mem8_o(i*2),
-            b => mem8_o(i*2+1),
-            y => mem4_i(i)
-        );
-
-        inst_dff_4 : entity work.dff_2_7(Behavioral)
+    gen_add_4_5 : for i in 0 to 3 generate
+        inst_adder_4_5 : entity work.bnn_adder(rtl)
+            generic map (W_i => 4,
+                         W_o => 5)
+            port map(
+                a => mem8_o(i*2),
+                b => mem8_o(i*2+1),
+                y => mem4_i(i)
+            );
+        inst_dff_5 : entity work.bnn_dff(Behavioral)
         generic map(W => 5)
         port map(
             d => mem4_i(i),
@@ -134,17 +134,16 @@ begin
         );
     end generate;
 
-    gen_5 : for i in 0 to 1 generate
-        inst_adder_5 : entity work.bnn_adder(rtl)
-        generic map(W_i => 5,
-                    W_o => 6)
-        port map(
-            a => mem4_o(i*2),
-            b => mem4_o(i*2+1),
-            y => mem2_i(i)
-        );
-
-        inst_dff_5 : entity work.dff_2_7(Behavioral)
+    gen_add_5_6 : for i in 0 to 1 generate
+        inst_adder_5_6 : entity work.bnn_adder(rtl)
+            generic map(W_i => 5,
+                        W_o => 6)
+            port map(
+                a => mem4_o(i*2),
+                b => mem4_o(i*2+1),
+                y => mem2_i(i)
+            );
+        inst_dff_6 : entity work.bnn_dff(Behavioral)
         generic map(W => 6)
         port map(
             d => mem2_i(i),
@@ -154,72 +153,70 @@ begin
         );
     end generate;
 
-    inst_adder_6 : entity work.bnn_adder(rtl)
-    generic map(W_i => 6,
-                W_o => 7)
-    port map(
-        a => mem2_o(0),
-        b => mem2_o(1),
-        y => mem1_i
-    );
+    inst_adder_6_7 : entity work.bnn_adder(rtl)
+        generic map(W_i => 6,
+                    W_o => 7)
+        port map(
+            a => mem2_o(0),
+            b => mem2_o(1),
+            y => mem1_i
+        );
+    inst_dff_7 : entity work.bnn_dff(Behavioral)
+        generic map(W => 7)
+        port map(
+            d => mem1_i,
+            rst => rst,
+            clk => clk,
+            q => mem1_o
+        );
+    -- 7 bit
 
-    inst_dff_6 : entity work.dff_2_7(Behavioral)
-    generic map(W => 7)
-    port map(
-        d => mem1_i,
-        rst => rst,
-        clk => clk,
-        q => mem1_o
-    );
-    
     ---------------------------------------------------------------------
     --2P-N
-    inst_adder_7 : entity work.bnn_adder(rtl)
-    generic map(W_i => 7,
-                W_o => 8)
-    port map(
-        a => mem1_o,
-        b => mem1_o,
-        y => sum_2p
-    );
-
-    inst_dff_7 : entity work.dff_2_7(Behavioral)
+    inst_adder_7_8 : entity work.bnn_adder(rtl)
+        generic map(W_i => 7,
+                    W_o => 8)
+        port map(
+            a => mem1_o,
+            b => mem1_o,
+            y => P2
+        );
+    inst_dff_8 : entity work.bnn_dff(Behavioral)
     generic map(W => 8)
     port map(
-        d => sum_2p,
+        d => P2,
         rst => rst,
         clk => clk,
-        q => dff_2p
+        q => dff_2P
     );
+    -- 8 bit
 
-    inst_substr_7_8: entity work.substr_8(rtl)
-    port map(
-        a => dff_2p,
-        y => dff_substr
-    );
+    inst_substr_7_8: entity work.bnn_substr(rtl)
+        port map(
+            a => dff_2P,
+            b => x"40",
+            y => dff_substr
+        );
 
-    process(clk)
+     process(clk)
         begin
             if rising_edge(clk)then
-                if (rst) then
-                    delay_val <= (others => '0');
-                    o_val <= '0';
-                else
-                    delay_val <= delay_val(6 downto 0) & i_val;
-                    o_val <= delay_val(7);
+                -- fixme reset
+                -- fixme o_val incorrect mask
+                delay_val <= delay_val(7 downto 0) & i_val;
+                if(delay_val(7) = '1')then
+                  o_val <= delay_val(1);
                 end if;
             end if;
-    end process;
+     end process;
 
-    process(clk)
+     process(clk) -- fixme async reset
         begin
-            if rising_edge(clk) then
-                if rst = '1'then
-                    stream_o <= (others => '0');
-                elsif delay_val(7) then
-                    stream_o <= dff_substr;
-                end if;
+            if rst = '1' then
+                stream_o <= (others => '0');
+            elsif rising_edge(clk) and delay_val(7) = '1'then
+                stream_o <= dff_substr;
             end if;
-    end process;
+     end process;
 
-end Behavioral;
+end rtl;
