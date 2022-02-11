@@ -8,12 +8,12 @@ The testbench is written with cocotb.
 
 ## Dependencies
 
-- Python 3.6+ (obviously)
+- Python 3.6+
 - GHDL 0.37
 - cocotb 1.6.1
+- VHDL 2008
 
-> Feel free to use any simulator with VHDL and cocotb support. There was some issues with GHDL and Windows,
-so it is better to use Linux if you suppose to use GHDL.
+> Feel free to use any simulator with VHDL and cocotb support.
 
 ## Usage
 
@@ -21,16 +21,16 @@ so it is better to use Linux if you suppose to use GHDL.
 
 From CLI:
 
-- `cd <this folder>`
-- `make clean`
-- `make WAVES=1` - if you'd like to get waveforms, else `make`
-- `gtkwave ./popcount.vcd`
+$ cd <this folder>
+$ make clean
+$ make WAVES=1
+$ gtkwave ./popcount.vcd
 
 ### Windows
 
 From MSYS2 shell:
 
-- `cd <this folder>`
-- `make clean`
-- `make WAVES=1` - if you'd like to get waveforms, else `make`
-- `gtkwave .\popcount.vcd`
+$ cd <this folder>
+$ make clean
+$ make WAVES=1
+$ gtkwave .\popcount.vcd
