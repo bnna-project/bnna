@@ -1,3 +1,11 @@
-sim/**/*.vcd
-sim/**/*.wlf
+
+# Simulation files
 sim/**/work
+sim/**/*.wlf
+sim/**/sim_build
+sim/**/*.fst*
+sim/**/*.vcd
+sim/**/*.xml
+sim/**/iverilog_dump.v
+modelsim.ini
+__pycache__
