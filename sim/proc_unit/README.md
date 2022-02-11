@@ -35,16 +35,16 @@ The testbench is written with cocotb.
 
 From CLI:
 
-$ cd <this folder>
-$ make clean
-$ make WAVES=1
-$ gtkwave ./popcount.vcd
+    $ cd <this folder>
+    $ make clean
+    $ make WAVES=1
+    $ gtkwave ./popcount.vcd
 
 ### Windows
 
 From MSYS2 (or Conda) shell:
 
-$ cd <this folder>
-$ make clean
-$ make WAVES=1
-$ gtkwave .\popcount.vcd
+    $ cd <this folder>
+    $ make clean
+    $ make WAVES=1
+    $ gtkwave .\popcount.vcd
