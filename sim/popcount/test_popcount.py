@@ -89,14 +89,14 @@ async def run_test(dut, payload_lengths=None, payload_data=None):
         rx_data = list()
 
         await cocotb.start(run_data(dut, test_data, tx_data))
-        # await cocotb.start(get_data(dut, len(test_data), rx_data))
+        await cocotb.start(get_data(dut, len(test_data), rx_data))
 
         await Timer(3, 'us')
 
         tb.log.info("TX data: %s", tx_data)
-        # tb.log.info("RX data: %s", rx_data)
+        tb.log.info("RX data: %s", rx_data)
 
-        # assert tx_data == rx_data
+        assert tx_data == rx_data
 
     await RisingEdge(dut.clk)
     await RisingEdge(dut.clk)

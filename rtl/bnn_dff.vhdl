@@ -14,7 +14,7 @@ entity bnn_dff is
     );
 end bnn_dff;
 
-architecture Behavioral of bnn_dff is
+architecture rtl of bnn_dff is
 
 begin
     process(clk)begin
@@ -25,4 +25,4 @@ begin
         end if;
     end process;
 
-end Behavioral;
+end rtl;
