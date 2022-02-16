@@ -37,22 +37,28 @@ class TB(object):
 #----------------------------------------------------------------------------------
 #
 #----------------------------------------------------------------------------------
-def xnor_pcnt_2p_n(sample, weight):
+def xnor_popcount(data, weights):
     # xnor
-
+    xnor = ~(data ^ weights)
+    xnor_str = format(xnor & 0xffffffffffffffff, '64b')
     # popcount
     bit_cnt = 0
-    for i in range(len(sample)):
-        if (sample[i] == "1"):
+    for i in range(len(xnor_str)):
+        if(xnor_str[i] == "1"):
             bit_cnt += 1
-
-    # 2P-N
+    #2P-N
     double_p = bit_cnt << 1
-    double_pn = double_p - len(sample)
+    double_pn = double_p - len(xnor_str)
 
     return double_pn
 
-
+def pe(threshold, num_range):
+    acc = 0
+    for i in range(num_range):
+        acc += xnor_popcount(i,i-1)
+        if(acc >= threshold):
+            return 1
+    return 0
 #----------------------------------------------------------------------------------
 #
 #----------------------------------------------------------------------------------
@@ -71,10 +77,11 @@ async def run_data(dut, test_data, tx_data):
         await RisingEdge(dut.clk)
         dut.i_val_outside.value = 1
         dut.data.value = word
-        dut.weights.value = 0
+        dut.weights.value = word-1
         dut.threshold.value = 0
 
         if (dut.i_val_outside.value):
+
             # here is the place for accumulator and comparator models. Pseudocode:
             # done = (acc >= threshold)
             # if done:

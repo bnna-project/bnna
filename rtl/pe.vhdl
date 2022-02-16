@@ -31,22 +31,23 @@ architecture struct of pe is
   begin
     process(clk)
       begin
-        if reset = '1' then
-          first_dff_weights_pe  <= (others => '0');
-        elsif rising_edge(clk)then
-            if i_val_outside = '1'then
-                first_dff_weights_pe  <= weights;
-            end if;
+        if rising_edge(clk) and i_val_outside = '1'then
+          if reset = '1' then
+            first_dff_weights_pe  <= (others => '0');
+          else
+            first_dff_weights_pe  <= weights;
+          end if;
         end if;
     end process;
 
     process(clk)
       begin
-        if reset = '1' then
-          first_dff_data_pe     <= (others => '0');
-        elsif rising_edge(clk)then
-            if i_val_outside = '1'then
-                first_dff_data_pe     <= data;
+
+        if rising_edge(clk) and i_val_outside = '1' then
+          if reset = '1' then
+            first_dff_data_pe     <= (others => '0');
+          else
+            first_dff_data_pe     <= data;
             end if;
         end if;
     end process;
@@ -68,7 +69,7 @@ architecture struct of pe is
             end if;
     end process;
 
-    inst_bnn_popcount : entity work.popcount(rtl)
+    inst_bnn_popcount : entity work.popcount(struct)
         port map(
             i_val       => o_val_xnor,
             clk         => clk,
