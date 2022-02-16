@@ -13,7 +13,7 @@ entity popcount is
   );
 end popcount;
 
-architecture struct of popcount is
+architecture rtl of popcount is
 
     type ram_type32 is array (31 downto 0) of std_logic_vector(1 downto 0);
     signal mem32_i      : ram_type32 := (others => (others => '0'));
@@ -227,4 +227,4 @@ begin
 -----------------------------------------------------------------------
 
 
-end struct;
+end rtl;
