@@ -26,7 +26,7 @@ module top
 
   assign USER_LED1 = heartbit[$high(heartbit)];
 
-  popcount
+  (* keep_hierarchy="yes" *)(* dont_touch="true" *)popcount
   pcnt
   (
     . i_val      (PB2          ) ,
