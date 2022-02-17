@@ -24,25 +24,29 @@ architecture rtl of comparator is
     --first d_ff comparator
     process(clk)
       begin
-        if reset = '1'then
-          first_dff_comp <= (others => '0');
-        elsif rising_edge(clk) and i_val_comp = '1'then
-          first_dff_comp <= a;
+        if rising_edge(clk)then
+          if reset = '1'then
+            first_dff_comp <= (others => '0');
+          elsif i_val_comp = '1'then
+            first_dff_comp <= a;
+          end if;
         end if;
     end process;
 
     process(clk)begin
-      if reset = '1'then
-        second_dff_comp <= (others => '0');
-      elsif rising_edge(clk) and i_val_comp = '1'then
-        second_dff_comp <= b;
+      if rising_edge(clk)then
+        if reset = '1'then
+          second_dff_comp <= (others => '0');
+        elsif i_val_comp = '1'then
+          second_dff_comp <= b;
+        end if;
       end if;
     end process;
 
     process(clk)
       begin
         if(first_dff_comp(31) > second_dff_comp(31))then
-          comp_result <= '1';
+          comp_result <= '0';
         else
           if(first_dff_comp >= second_dff_comp)then
             comp_result <= '1';
@@ -55,18 +59,22 @@ architecture rtl of comparator is
     process(clk)begin
         if rising_edge(clk)then
             delay_val_comp <= delay_val_comp(0) & i_val_comp;
-            if delay_val_comp(1) = '1'then
+            if delay_val_comp(0) = '1' then
                 o_val_comp <= '1';
+            else
+                o_val_comp <= '0';
             end if;
         end if;
     end process;
 
     process(clk)
         begin
-            if reset = '1'then
+            if rising_edge(clk)then
+              if reset = '1'then
                 a_comp_b <= '0';
-            elsif rising_edge(clk) and delay_val_comp(0) = '1' then
+              elsif delay_val_comp(0) = '1' then
                 a_comp_b <= comp_result;
+              end if;
             end if;
     end process;
 
