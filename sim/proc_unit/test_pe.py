@@ -23,7 +23,7 @@ class TB(object):
         self.log = logging.getLogger("cocotb.tb")
         self.log.setLevel(logging.DEBUG)
 
-        cocotb.fork(Clock(dut.clk, 2, units="ns").start())
+        cocotb.fork(Clock(dut.clk, 1, units="ns").start())
 
     async def reset(self):
         self.dut.reset.setimmediatevalue(1)
@@ -52,6 +52,7 @@ def xnor_popcount(data, weights):
     double_pn = double_p - len(xnor_str)
 
     return double_pn
+
 
 #----------------------------------------------------------------------------------
 #
@@ -108,7 +109,7 @@ async def run_test(dut, payload_lengths=None, payload_data=None):
         await cocotb.start(run_data(dut, test_data, tx_data))
         await cocotb.start(get_data(dut, len(test_data), rx_data))
 
-        await Timer(3, 'us')
+        await Timer(2, 'us')
 
         tb.log.info("TX data: %s", tx_data)
         tb.log.info("RX data: %s", rx_data)
