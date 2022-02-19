@@ -71,19 +71,19 @@ async def run_data(dut, test_data, tx_data):
     result = 0
     threshold = 0
     for word in test_data:
-        await RisingEdge(dut.clk)
         dut.i_val_outside.value = 1
         dut.data.value = word
         dut.weights.value = word-1
         dut.threshold.value = 0
 
-        if (dut.i_val_outside.value):
-            acc += xnor_popcount(word, word-1)
-            if(acc < threshold):
-                result = 0
-            else:
-                result = 1
-            tx_data.append(result)
+        acc += xnor_popcount(word, word-1)
+        if(acc >= threshold):
+            result = 1
+        else:
+            result = 0
+        tx_data.append(result)
+
+        await RisingEdge(dut.clk)
 
     dut.i_val_outside.value = 0
 
