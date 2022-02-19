@@ -60,7 +60,7 @@ async def get_data(dut, size, rx_data):
     while len(rx_data) < size:
         await RisingEdge(dut.clk)
         if (dut.o_val_pe.value):
-            rx_data.append(dut.result.value.signed_integer)
+            rx_data.append(dut.result.value.integer)
 
 
 #----------------------------------------------------------------------------------
