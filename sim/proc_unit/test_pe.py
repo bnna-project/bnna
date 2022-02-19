@@ -93,7 +93,6 @@ async def run_data(dut, test_data, tx_data):
 #----------------------------------------------------------------------------------
 async def run_test(dut, payload_lengths=None, payload_data=None):
     tb = TB(dut)
-    await tb.reset()
 
     dut.i_val_outside.value = 0
     dut.data.value = 0
@@ -101,6 +100,8 @@ async def run_test(dut, payload_lengths=None, payload_data=None):
     dut.threshold.value = 0
 
     for test_data in [payload_data(x) for x in payload_lengths()]:
+        await tb.reset()
+
         tx_data = list()
         rx_data = list()
 
