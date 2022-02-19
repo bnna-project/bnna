@@ -18,8 +18,7 @@ entity comparator is
 architecture rtl of comparator is
   signal first_dff_comp     : std_logic_vector(31 downto 0);
   signal second_dff_comp    : std_logic_vector(31 downto 0);
-  signal comp_result        : std_logic;
-  signal delay_val_comp     : std_logic_vector(1 downto 0);
+  signal delay_val_comp     : std_logic;
   begin
     --first d_ff comparator
     process(clk)
@@ -43,39 +42,30 @@ architecture rtl of comparator is
       end if;
     end process;
 
-    process(clk)
-      begin
-        if(first_dff_comp(31) > second_dff_comp(31))then
-          comp_result <= '0';
-        else
-          if(first_dff_comp >= second_dff_comp)then
-            comp_result <= '1';
-          else
-            comp_result <= '0';
-          end if;
+    process (clk) begin
+        if rising_edge(clk) then
+            if (first_dff_comp(31) > second_dff_comp(31))then
+              a_comp_b <= '0';
+            else
+                if (first_dff_comp >= second_dff_comp) then
+                    a_comp_b <= '1';
+                else
+                    a_comp_b <= '0';
+                end if;
+            end if;
         end if;
     end process;
+
     -- delay through pipeline
     process(clk)begin
         if rising_edge(clk)then
-            delay_val_comp <= delay_val_comp(0) & i_val_comp;
-            if delay_val_comp(0) = '1' then
+            delay_val_comp <= i_val_comp;
+            if delay_val_comp = '1' then
                 o_val_comp <= '1';
             else
                 o_val_comp <= '0';
             end if;
         end if;
-    end process;
-
-    process(clk)
-        begin
-            if rising_edge(clk)then
-              if reset = '1'then
-                a_comp_b <= '0';
-              elsif delay_val_comp(0) = '1' then
-                a_comp_b <= comp_result;
-              end if;
-            end if;
     end process;
 
 end rtl;
