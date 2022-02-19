@@ -16,7 +16,7 @@ end acc;
 
 architecture rtl of acc is
     signal first_dff        : std_logic_vector(8 downto 0);
-    signal delay_val        : std_logic_vector(2 downto 0);
+    signal delay_val        : std_logic_vector(1 downto 0);
     signal resize_data_i    : std_logic_vector(31 downto 0);
     signal o_acc            : std_logic_vector(31 downto 0);
     signal o_reg_acc        : std_logic_vector(31 downto 0);
@@ -64,8 +64,8 @@ begin
     process(clk)
         begin
             if rising_edge(clk)then
-                 delay_val <= delay_val(1 downto 0) & i_val_acc;
-                 if delay_val(2) = '1' then
+                 delay_val <= delay_val(0) & i_val_acc;
+                 if delay_val(1) = '1' then
                     o_val_acc <= '1';
                  else
                    o_val_acc <= '0';
@@ -80,7 +80,7 @@ begin
             if rising_edge(clk)then
               if reset = '1'then
                   o_data <= (others => '0');
-              elsif delay_val(2) = '1'then
+              else
                 o_data <= o_reg_acc;
               end if;
             end if;
