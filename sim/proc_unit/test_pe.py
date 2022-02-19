@@ -37,21 +37,20 @@ class TB(object):
 #----------------------------------------------------------------------------------
 #
 #----------------------------------------------------------------------------------
-def xnor_pcnt_2p_n(sample, weight):
+def xnor_popcount(data, weights):
     # xnor
-
+    xnor = ~(data ^ weights)
+    xnor_str = format(xnor & 0xffffffffffffffff, '64b')
     # popcount
     bit_cnt = 0
-    for i in range(len(sample)):
-        if (sample[i] == "1"):
+    for i in range(len(xnor_str)):
+        if(xnor_str[i] == "1"):
             bit_cnt += 1
-
-    # 2P-N
+    #2P-N
     double_p = bit_cnt << 1
-    double_pn = double_p - len(sample)
+    double_pn = double_p - len(xnor_str)
 
     return double_pn
-
 
 #----------------------------------------------------------------------------------
 #
@@ -59,29 +58,31 @@ def xnor_pcnt_2p_n(sample, weight):
 async def get_data(dut, size, rx_data):
     while len(rx_data) < size:
         await RisingEdge(dut.clk)
-        if (dut.o_val.value):
-            rx_data.append(dut.stream_o.value.signed_integer)
+        if (dut.o_val_pe.value):
+            rx_data.append(dut.result.value.signed_integer)
 
 
 #----------------------------------------------------------------------------------
 #
 #----------------------------------------------------------------------------------
 async def run_data(dut, test_data, tx_data):
+    acc = 0
+    result = 0
+    threshold = 0
     for word in test_data:
         await RisingEdge(dut.clk)
         dut.i_val_outside.value = 1
         dut.data.value = word
-        dut.weights.value = 0
+        dut.weights.value = word-1
         dut.threshold.value = 0
 
         if (dut.i_val_outside.value):
-            # here is the place for accumulator and comparator models. Pseudocode:
-            # done = (acc >= threshold)
-            # if done:
-            #   acc = 0
-            # else:
-            #   acc += xnor_pcnt_2p_n(word, weight)
-            tx_data.append(dut.data.value.binstr)
+            acc += xnor_popcount(word, word-1)
+            if(acc < threshold):
+                result = 0
+            else:
+                result = 1
+            tx_data.append(result)
 
     dut.i_val_outside.value = 0
 
@@ -103,14 +104,14 @@ async def run_test(dut, payload_lengths=None, payload_data=None):
         rx_data = list()
 
         await cocotb.start(run_data(dut, test_data, tx_data))
-        # await cocotb.start(get_data(dut, len(test_data), rx_data))
+        await cocotb.start(get_data(dut, len(test_data), rx_data))
 
         await Timer(3, 'us')
 
-        # tb.log.info("TX data: %s", tx_data)
-        # tb.log.info("RX data: %s", rx_data)
+        tb.log.info("TX data: %s", tx_data)
+        tb.log.info("RX data: %s", rx_data)
 
-        # assert tx_data == rx_data
+        assert tx_data == rx_data
 
     await RisingEdge(dut.clk)
     await RisingEdge(dut.clk)

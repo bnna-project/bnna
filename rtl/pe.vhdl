@@ -21,7 +21,6 @@ architecture struct of pe is
   signal xnor_output            : std_logic_vector(63 downto 0);
   signal first_dff_data_pe      : std_logic_vector(63 downto 0);
   signal first_dff_weights_pe   : std_logic_vector(63 downto 0);
-  signal delay_val_xnor         : std_logic_vector(1 downto 0);
   signal o_val_xnor             : std_logic;
   signal o_val_bnn_popcount     : std_logic;
   signal o_stream_popcount      : std_logic_vector(8 downto 0);
@@ -31,22 +30,22 @@ architecture struct of pe is
   begin
     process(clk)
       begin
-        if reset = '1' then
-          first_dff_weights_pe  <= (others => '0');
-        elsif rising_edge(clk)then
-            if i_val_outside = '1'then
-                first_dff_weights_pe  <= weights;
-            end if;
+        if rising_edge(clk)then
+          if reset = '1' then
+            first_dff_weights_pe  <= (others => '0');
+          elsif i_val_outside = '1'then
+            first_dff_weights_pe  <= weights;
+          end if;
         end if;
     end process;
 
     process(clk)
       begin
-        if reset = '1' then
-          first_dff_data_pe     <= (others => '0');
-        elsif rising_edge(clk)then
-            if i_val_outside = '1'then
-                first_dff_data_pe     <= data;
+        if rising_edge(clk)then
+          if reset = '1' then
+            first_dff_data_pe     <= (others => '0');
+          elsif i_val_outside = '1' then
+            first_dff_data_pe     <= data;
             end if;
         end if;
     end process;
@@ -62,13 +61,16 @@ architecture struct of pe is
 
     process(clk)
         begin
-            delay_val_xnor <= delay_val_xnor(0) & i_val_outside;
-            if delay_val_xnor(1) = '1'then
+            if rising_edge(clk)then
+              if i_val_outside = '1'then
                 o_val_xnor <= '1';
+              else
+                o_val_xnor <= '0';
+              end if;
             end if;
     end process;
 
-    inst_bnn_popcount : entity work.popcount(rtl)
+    inst_bnn_popcount : entity work.popcount(struct)
         port map(
             i_val       => o_val_xnor,
             clk         => clk,

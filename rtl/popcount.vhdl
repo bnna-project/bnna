@@ -49,10 +49,10 @@ architecture rtl of popcount is
 
 begin
     process(clk)begin
-        if rising_edge(clk) and i_val = '1'then
+        if rising_edge(clk)then
           if rst = '1' then
             dff_stream <= (others=>'0');
-          else
+          elsif i_val = '1' then
             dff_stream <= stream_i;
           end if;
         end if;

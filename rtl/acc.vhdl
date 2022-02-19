@@ -24,10 +24,12 @@ begin
     --first d_ff
     process(clk)
         begin
-            if reset = '1'then
-                first_dff <= (others => '0');
-            elsif rising_edge(clk) and i_val_acc = '1' then
+            if rising_edge(clk)then
+              if reset = '1'then
+                  first_dff <= (others => '0');
+              elsif i_val_acc = '1'then
                 first_dff <= i_data;
+              end if;
             end if;
     end process;
 
@@ -49,10 +51,12 @@ begin
     --accumulator
     process(clk)
         begin
-            if reset = '1'then
-                o_reg_acc <= (others => '0');
-            elsif rising_edge(clk)then
+            if rising_edge(clk)then
+              if reset = '1'then
+                  o_reg_acc <= (others => '0');
+              else
                 o_reg_acc <= o_acc;
+              end if;
             end if;
     end process;
 
@@ -63,6 +67,8 @@ begin
                  delay_val <= delay_val(1 downto 0) & i_val_acc;
                  if delay_val(2) = '1' then
                     o_val_acc <= '1';
+                 else
+                   o_val_acc <= '0';
                  end if;
             end if;
     end process;
@@ -71,10 +77,12 @@ begin
     -- last d_ff
     process(clk)
         begin
-            if reset = '1'then
-                o_data <= (others => '0');
-            elsif rising_edge(clk) and delay_val(2) = '1'then
+            if rising_edge(clk)then
+              if reset = '1'then
+                  o_data <= (others => '0');
+              elsif delay_val(2) = '1'then
                 o_data <= o_reg_acc;
+              end if;
             end if;
     end process;
 
