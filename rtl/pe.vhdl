@@ -43,9 +43,9 @@ architecture struct of pe is
       begin
         if rising_edge(clk)then
           if reset = '1' then
-            first_dff_data_pe     <= (others => '0');
+            first_dff_data_pe <= (others => '0');
           elsif i_val_outside = '1' then
-            first_dff_data_pe     <= data;
+            first_dff_data_pe <= data;
             end if;
         end if;
     end process;
@@ -70,7 +70,7 @@ architecture struct of pe is
             end if;
     end process;
 
-    inst_bnn_popcount : entity work.popcount(struct)
+    inst_bnn_popcount : entity work.popcount(rtl)
         port map(
             i_val       => o_val_xnor,
             clk         => clk,
