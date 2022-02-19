@@ -40,7 +40,8 @@ class TB(object):
 def xnor_popcount(data, weights):
     # xnor
     xnor = ~(data ^ weights)
-    xnor_str = format(xnor & 0xffffffffffffffff, '64b')
+    xnor_str = format(xnor & 0xffffffffffffffff, '064b')
+
     # popcount
     bit_cnt = 0
     for i in range(len(xnor_str)):
